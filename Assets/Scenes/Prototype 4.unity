@@ -240,8 +240,14 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!4 &126950988 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400046, guid: 7b6675de545141649953fd8adec4561b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1287216459}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &126950989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,7 +576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2299c3cdeb5e0284084c68618cb76999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 250
 --- !u!4 &1193369008
 Transform:
   m_ObjectHideFlags: 0
@@ -585,7 +591,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1211419928}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 126950988}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1211016355
 GameObject:
@@ -896,7 +902,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 400046, guid: 7b6675de545141649953fd8adec4561b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1193369008}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100046, guid: 7b6675de545141649953fd8adec4561b,
         type: 3}
@@ -1222,4 +1232,3 @@ SceneRoots:
   - {fileID: 1287216459}
   - {fileID: 89282476}
   - {fileID: 2109721293}
-  - {fileID: 1193369008}
