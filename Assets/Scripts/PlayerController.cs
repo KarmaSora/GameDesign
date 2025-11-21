@@ -15,6 +15,11 @@ public class PlayerController : MonoBehaviour
     public bool isGrounded;
     public float gravityModifier = 1;
 
+    public float playerHealth = 100.0f;
+    public int playerLives = 3;
+
+
+
     void Start()
     {
         playerRigidBody = GetComponent<Rigidbody>();

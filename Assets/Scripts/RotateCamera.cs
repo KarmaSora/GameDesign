@@ -30,7 +30,7 @@ public class RotateCamera : MonoBehaviour
 
         // Vertical rotation (looking up/down)
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -80f, 80f);
+        xRotation = Mathf.Clamp(xRotation, -80f, 80f);  //make sure you cant rotate camera more than 90 degrees up and down
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
