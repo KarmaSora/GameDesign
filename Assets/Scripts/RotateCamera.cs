@@ -17,6 +17,11 @@ public class RotateCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+    }
+    private void LateUpdate()
+    {
+
         //float horizontalInp = Input.GetAxis("Horizontal");
         //transform.Rotate(Vector3.up, horizontalInp * rotationSpeed * Time.deltaTime);
         // Get mouse movement
@@ -30,6 +35,9 @@ public class RotateCamera : MonoBehaviour
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
         // Horizontal rotation (turning left/right)
-        transform.parent.Rotate(Vector3.up * mouseX);
+        if (transform.parent)
+        {
+            transform.parent.Rotate(Vector3.up * mouseX);
+        }
     }
 }
