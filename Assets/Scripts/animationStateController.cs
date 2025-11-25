@@ -27,6 +27,7 @@ public class animationStateController : MonoBehaviour
     void Update()
     {
         bool isWalking = animator.GetBool(isWalkingHash);
+
         bool forwardPress = Input.GetKey("u");
 
         bool runPressed = Input.GetKey("left shift");

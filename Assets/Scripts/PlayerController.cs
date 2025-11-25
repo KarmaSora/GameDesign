@@ -7,16 +7,19 @@ public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
     private Rigidbody playerRigidBody;
-    public float playerSPeed = 10.0f;
-    public float playerJumpForce = 25.0f;
+    [SerializeField] private float playerMoveSpeed = 10.0f;
+    [SerializeField] private float playerJumpForce = 25.0f;
 
     public GameObject focalPoint;
-
     public bool isGrounded;
     public float gravityModifier = 1;
 
-    public float playerHealth = 100.0f;
-    public int playerLives = 3;
+
+
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private float runSpeed;
+
+
 
 
 
@@ -45,10 +48,10 @@ public class PlayerController : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
 
 
-        //playerRigidBody.AddForce(focalPoint.transform.forward * veritcalInput * playerSPeed);
-        //playerRigidBody.AddForce(focalPoint.transform.right * horizontal * playerSPeed);
-        playerRigidBody.transform.Translate(Vector3.forward * veritcalInput * Time.deltaTime * playerSPeed );
-        playerRigidBody.transform.Translate(Vector3.right * horizontal * Time.deltaTime * playerSPeed );
+        //playerRigidBody.AddForce(focalPoint.transform.forward * veritcalInput * playerMoveSpeed);
+        //playerRigidBody.AddForce(focalPoint.transform.right * horizontal * playerMoveSpeed);
+        playerRigidBody.transform.Translate(Vector3.forward * veritcalInput * Time.deltaTime * playerMoveSpeed );
+        playerRigidBody.transform.Translate(Vector3.right * horizontal * Time.deltaTime * playerMoveSpeed );
 
 
         if (Input.GetKeyDown(KeyCode.Space)  && isGrounded)
