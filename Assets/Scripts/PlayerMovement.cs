@@ -9,19 +9,20 @@ public class PlayerMovement : MonoBehaviour
 
     //NEWSCIRPT
     //Variables
-    public GameObject focalPoint;
     private Rigidbody playerRigidBody;
 
 
     [SerializeField] private float playerMoveSpeed;
 
-    [SerializeField] private float walkSpeed = 10;
-    [SerializeField] private float runSpeed = 20;
+    [SerializeField] private float walkSpeed = 5;
+    [SerializeField] private float runSpeed = 10;
 
     [SerializeField] private bool isGrounded;
     [SerializeField] private float groundCheckDistance;
     [SerializeField] private LayerMask groundMask;
-    [SerializeField] private float gravityModifier = -9.81f; 
+    [SerializeField] private float gravityModifier = -9.81f;
+
+    [SerializeField] public float jumpHight = 7;
 
 
 
@@ -29,11 +30,17 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 velocity;
 
     private CharacterController controller;
+    private Animator animator;
+
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
 
         groundCheckDistance = 0.2f;
+        animator = GetComponentInChildren<Animator>(); 
+
+
     }
 
     // Update is called once per frame
@@ -46,6 +53,13 @@ public class PlayerMovement : MonoBehaviour
 
             isGrounded = false;
         }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Attack();
+
+        }
+
     }
 
     private void Move()
@@ -53,21 +67,16 @@ public class PlayerMovement : MonoBehaviour
 
         isGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundMask);
         
-        float veritcalInput = Input.GetAxis("Vertical");
+        float veritcalInput = Input.GetAxis("Vertical"); //Move Z
 
         moveDirection = new Vector3 (0f, 0f, veritcalInput);
+        moveDirection = transform.TransformDirection(moveDirection);
 
         //check if grounded and stop applying gravity
-        controller.Move(moveDirection * Time.deltaTime);
 
-        if (true)
+        if (isGrounded)
         {
-            moveDirection *= playerMoveSpeed;
 
-            if (isGrounded && velocity.y < 0)
-            {
-                velocity.y = -2f;
-            }
 
             if (moveDirection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift))
             {
@@ -87,10 +96,22 @@ public class PlayerMovement : MonoBehaviour
                 Idle();
 
             }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                jump();
+                Debug.Log("player should jump");
+            }
+
+            moveDirection *= playerMoveSpeed;
+
         }
 
 
         //Apply gravity to character
+        controller.Move(moveDirection * Time.deltaTime);
+
+
         velocity.y += gravityModifier * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
 
@@ -99,9 +120,29 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    private void Idle() { }
-    private void Walk() { playerMoveSpeed = walkSpeed; }
-    private void Run() { playerMoveSpeed = runSpeed; }
+    private void Idle() { 
+        animator.SetFloat("Speed", 0, 0.1f, Time.deltaTime);
+    }
+    private void Walk() { 
+        playerMoveSpeed = walkSpeed;
+        animator.SetFloat("Speed", 0.5f, 0.1f, Time.deltaTime);
+    }
+    private void Run() {
+        animator.SetFloat("Speed", 1, 0.1f, Time.deltaTime);
+        playerMoveSpeed = runSpeed;
+    }
+    private void jump()
+    {
+
+        velocity.y = Mathf.Sqrt(jumpHight * -2 * gravityModifier);
+
+    }
+    private void Attack()
+    {
+
+        animator.SetTrigger("Attack");
+
+    }
 
 
 

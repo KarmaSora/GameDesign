@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 213947528}
   - component: {fileID: 213947527}
   - component: {fileID: 213947526}
+  - component: {fileID: 213947529}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -311,7 +312,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 64.1
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -329,6 +330,19 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &213947529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 213947524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb8bf91873d0d4c4ea02df7f92e41b81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSentintivity: 220
 --- !u!1001 &245963551
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -859,7 +873,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1301643505922104, guid: 961be46ca9a355943ae3f65c47741bb0, type: 3}
       propertyPath: m_Name
-      value: Island
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 4625923886776944, guid: 961be46ca9a355943ae3f65c47741bb0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1024,6 +1038,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: ba24e610e0a338545b447ff44a3cf1cc, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7d4b836abe6914746b9b8554dbc34917, type: 2}
     - target: {fileID: 13700000, guid: ba24e610e0a338545b447ff44a3cf1cc, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1044,7 +1062,7 @@ GameObject:
   - component: {fileID: 2058147876}
   - component: {fileID: 2058147879}
   - component: {fileID: 2058147878}
-  - component: {fileID: 2058147877}
+  - component: {fileID: 2058147880}
   m_Layer: 0
   m_Name: newPLayer
   m_TagString: Untagged
@@ -1069,28 +1087,6 @@ Transform:
   - {fileID: 1508194683}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2058147877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2058147875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23161d4b2ee9c974b93525456a863a90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  focalPoint: {fileID: 0}
-  playerMoveSpeed: 0
-  walkSpeed: 10
-  runSpeed: 20
-  isGrounded: 0
-  groundCheckDistance: 0
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 64
-  gravityModifier: -9.81
 --- !u!143 &2058147878
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1144,6 +1140,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2058147880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058147875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23161d4b2ee9c974b93525456a863a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerMoveSpeed: 0
+  walkSpeed: 10
+  runSpeed: 20
+  isGrounded: 0
+  groundCheckDistance: 0
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  gravityModifier: -9.81
+  jumpHight: 7
 --- !u!1001 &2109721293
 PrefabInstance:
   m_ObjectHideFlags: 0
