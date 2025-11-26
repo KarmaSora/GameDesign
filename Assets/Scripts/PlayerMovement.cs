@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
 
     //NEWSCIRPT
     //Variables
-    private Rigidbody playerRigidBody;
+    //private Rigidbody playerRigidBody;
 
 
     [SerializeField] private float playerMoveSpeed;
@@ -36,6 +36,8 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private Collider weaponCollidor;
 
+    [SerializeField] private bool isBlocking;     // Read-only flag for other scripts
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -61,6 +63,8 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             //StartCoroutine(useShield());
+            HandleBlockInput();  // <<< NEW
+
 
         }
 
@@ -155,16 +159,64 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-
-
-
-    private void EnableWeaponCollidor() {
+    private void EnableWeaponCollidor()
+    {
         weaponCollidor.enabled = true;
 
     }
-    private void disableWeaponCollidor() {
-    
+    private void disableWeaponCollidor()
+    {
+
         weaponCollidor.enabled = false;
+    }
+
+
+
+
+    private void HandleBlockInput()
+    {
+        // Right mouse button held = block
+
+        if (!isBlocking)
+        {
+            StartBlock();
+        }
+        else 
+        {
+            StopBlock();
+        }
+    }
+
+    private void StartBlock()
+    {
+        isBlocking = true;
+
+        // Tell Animator to play block pose/animation
+        if (animator != null)
+        {
+            animator.SetBool("IsBlocking", true);
+        }
+
+        // Optional: you can slow movement while blocking, disable attacks, etc.
+        // Example: playerMoveSpeed = walkSpeed; 
+    }
+
+    private void StopBlock()
+    {
+        isBlocking = false;
+
+        if (animator != null)
+        {
+            animator.SetBool("IsBlocking", false);
+        }
+
+        // Optional: restore movement values, re-enable attacks, etc.
+    }
+
+    // Public read-only accessor so other scripts can check if we’re blocking
+    public bool IsBlocking
+    {
+        get { return isBlocking; }
     }
 
 
