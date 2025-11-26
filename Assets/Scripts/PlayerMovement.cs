@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController controller;
     private Animator animator;
 
+    [SerializeField] private Collider weaponCollidor;
 
     void Start()
     {
@@ -140,12 +141,23 @@ public class PlayerMovement : MonoBehaviour
     }
     private IEnumerator Attack()
     {
+        EnableWeaponCollidor();
         animator.SetLayerWeight(animator.GetLayerIndex("Attack Layer"), 1);
         animator.SetTrigger("Attack");
 
         yield return new WaitForSeconds(0.9f);
         animator.SetLayerWeight(animator.GetLayerIndex("Attack Layer"), 0);
+        disableWeaponCollidor();
 
+    }
+
+    private void EnableWeaponCollidor() {
+        weaponCollidor.enabled = true;
+
+    }
+    private void disableWeaponCollidor() {
+    
+        weaponCollidor.enabled = false;
     }
 
 
