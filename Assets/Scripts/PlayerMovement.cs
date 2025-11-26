@@ -18,11 +18,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float runSpeed = 10;
 
     [SerializeField] private bool isGrounded;
-    [SerializeField] private float groundCheckDistance;
+    //[SerializeField] private float groundCheckDistance;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float gravityModifier = -9.81f;
 
-    [SerializeField] public float jumpHight = 7;
+    [SerializeField] private float jumpHight = 7;
+
+    [SerializeField] private bool defending = false;
 
 
 
@@ -38,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
 
-        groundCheckDistance = 0.2f;
+        //groundCheckDistance = 0.2f;
         animator = GetComponentInChildren<Animator>(); 
 
 
@@ -48,17 +50,17 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Move();
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            //playerRigidBody.AddForce(Vector3.up * playerJumpForce, ForceMode.Impulse);
 
-            isGrounded = false;
-        }
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             StartCoroutine(Attack());
             
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            //StartCoroutine(useShield());
 
         }
 
@@ -67,8 +69,9 @@ public class PlayerMovement : MonoBehaviour
     private void Move()
     {
 
-        isGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundMask);
-        
+        isGrounded = controller.isGrounded;
+        //isGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundMask);
+
         float veritcalInput = Input.GetAxis("Vertical"); //Move Z
 
         moveDirection = new Vector3 (0f, 0f, veritcalInput);
@@ -105,9 +108,9 @@ public class PlayerMovement : MonoBehaviour
                 Debug.Log("player should jump");
             }
 
-            moveDirection *= playerMoveSpeed;
 
         }
+            moveDirection *= playerMoveSpeed;
 
 
         //Apply gravity to character
@@ -150,6 +153,10 @@ public class PlayerMovement : MonoBehaviour
         disableWeaponCollidor();
 
     }
+
+
+
+
 
     private void EnableWeaponCollidor() {
         weaponCollidor.enabled = true;

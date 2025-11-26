@@ -1,26 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class DealDamage : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] private float damage;
 
+    [SerializeField] private GameObject owner;
 
     private void OnTriggerEnter(Collider other)
     {
-        bool kill = false;
-        if (other.CompareTag("Enemy"))
+
+        // Ignore collisions with the owner (if set)
+        if (owner != null && other.gameObject == owner)
         {
-            HealthSystem enemy = other.GetComponent<HealthSystem>();
-            enemy.TakeDamage(damage);
-            if(enemy.health <= 0)
-            {
-                kill = true;
-            }
+            return;
         }
-        if(kill) Destroy(other.gameObject);
+        if (!other.CompareTag("Enemy"))
+        {
+            return;
+        }
+
+
+        HealthSystem healthSystem = other.GetComponent<HealthSystem>();
+
+        if (healthSystem == null)
+        {
+            // No health system found, nothing to damage
+            return;
+        }
+
+        // HealthSystem will handle dying internally
+        healthSystem.TakeDamage(damage);
     }
 
+
 }
+
+

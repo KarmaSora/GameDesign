@@ -6,15 +6,39 @@ public class HealthSystem : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    [SerializeField] public float health;
+    [SerializeField] public float currentHealth;
+
+    [SerializeField] private float maxHealth = 100f;
+
+
+    private void Awake()
+    {
+        currentHealth = maxHealth;
+
+    }
 
 
     public void TakeDamage(float damage) {
 
-        health -=damage;
-        Debug.Log("Health:" + health); 
+        if(damage <=0.0f) return;
+
+
+        currentHealth -= damage;
+        Debug.Log("Health:" + currentHealth); 
+
+        if (currentHealth <= 0.0f) {
+
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
 
     }
+
+
 
 
 }
