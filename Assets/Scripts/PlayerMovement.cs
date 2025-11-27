@@ -14,8 +14,9 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float playerMoveSpeed;
 
-    [SerializeField] private float walkSpeed = 5;
-    [SerializeField] private float runSpeed = 10;
+    public float moveSpeedIncreaser =0;
+    [SerializeField] private float walkSpeed = 5 ;
+    [SerializeField] private float runSpeed = 10 ;
 
     [SerializeField] private bool isGrounded;
     //[SerializeField] private float groundCheckDistance;
@@ -135,12 +136,12 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Speed", 0, 0.1f, Time.deltaTime);
     }
     private void Walk() { 
-        playerMoveSpeed = walkSpeed;
+        playerMoveSpeed = walkSpeed * moveSpeedIncreaser;
         animator.SetFloat("Speed", 0.5f, 0.1f, Time.deltaTime);
     }
     private void Run() {
         animator.SetFloat("Speed", 1, 0.1f, Time.deltaTime);
-        playerMoveSpeed = runSpeed;
+        playerMoveSpeed = runSpeed * moveSpeedIncreaser;
     }
     private void jump()
     {

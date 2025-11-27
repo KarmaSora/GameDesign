@@ -6,7 +6,7 @@ using static UnityEngine.UI.GridLayoutGroup;
 public class DealDamage : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] private float damage;
+    [SerializeField] public float damage = 10;
 
     [SerializeField] private GameObject owner;
 

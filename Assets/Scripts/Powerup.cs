@@ -9,7 +9,7 @@ public class Powerup : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //add check if its a player or enemy
-        
+
         Destroy(gameObject);
         powerupEffect.Apply(other.gameObject);
     }
