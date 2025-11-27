@@ -63,7 +63,9 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             //StartCoroutine(useShield());
-            HandleBlockInput();  // <<< NEW
+            //HandleBlockInput();  // <<< NEW
+            StartCoroutine(HandleBlockInput());
+
 
 
         }
@@ -173,10 +175,10 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-    private void HandleBlockInput()
+    private IEnumerator HandleBlockInput()
     {
         // Right mouse button held = block
-
+        animator.SetLayerWeight(animator.GetLayerIndex("Attack Layer"), 1);
         if (!isBlocking)
         {
             StartBlock();
@@ -185,6 +187,8 @@ public class PlayerMovement : MonoBehaviour
         {
             StopBlock();
         }
+        yield return new WaitForSeconds(0.9f);
+        animator.SetLayerWeight(animator.GetLayerIndex("Attack Layer"), 0);
     }
 
     private void StartBlock()
@@ -194,7 +198,7 @@ public class PlayerMovement : MonoBehaviour
         // Tell Animator to play block pose/animation
         if (animator != null)
         {
-            animator.SetBool("IsBlocking", true);
+            animator.SetBool("isBlocking", true);
         }
 
         // Optional: you can slow movement while blocking, disable attacks, etc.
@@ -207,7 +211,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (animator != null)
         {
-            animator.SetBool("IsBlocking", false);
+            animator.SetBool("isBlocking", false);
         }
 
         // Optional: restore movement values, re-enable attacks, etc.
