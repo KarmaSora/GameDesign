@@ -9,7 +9,7 @@ public class SpawnManager : MonoBehaviour
 
     public GameObject enemyPrefab;
 
-    public GameObject powerUpPrefab;
+    public GameObject[] powerUpPrefabs;
 
     public float spawnRange = 9;
 
@@ -21,7 +21,7 @@ public class SpawnManager : MonoBehaviour
     {
 
         spawnEnemyWave(waveNumber);
-        Instantiate(powerUpPrefab, generateSpawnPos(), powerUpPrefab.transform.rotation);
+        SpawnRandomPowerup();
 
 
 
@@ -35,7 +35,7 @@ public class SpawnManager : MonoBehaviour
         if (enemyCount == 0)
         {
             spawnEnemyWave(waveNumber++);
-            Instantiate(powerUpPrefab, generateSpawnPos(), powerUpPrefab.transform.rotation);
+            SpawnRandomPowerup();
         }
 
     }
@@ -59,4 +59,26 @@ public class SpawnManager : MonoBehaviour
 
         return randomPos;
     }
+
+    private void SpawnRandomPowerup()
+    {
+        if (powerUpPrefabs == null || powerUpPrefabs.Length == 0)
+        {
+            Debug.LogWarning("SpawnManager: No powerUpPrefabs assigned!");
+            return;
+        }
+
+        int index = Random.Range(0, powerUpPrefabs.Length);
+        GameObject selectedPowerup = powerUpPrefabs[index];
+
+        if (selectedPowerup == null)
+        {
+            Debug.LogWarning("SpawnManager: Selected powerup prefab is null at index " + index);
+            return;
+        }
+
+        Instantiate(selectedPowerup, generateSpawnPos(), selectedPowerup.transform.rotation);
+    }
+
+
 }
