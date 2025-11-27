@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5f9cee44d1617a4bae9bfd6ec105211, type: 3}
-  m_Name: MajourDamageBuff
+  m_Script: {fileID: 11500000, guid: 556f85d0f747b364d9b4f0bdc365f0ee, type: 3}
+  m_Name: MajorJumpBuff
   m_EditorClassIdentifier: 
-  amount: 100
+  amount: 20
+  duration: 3

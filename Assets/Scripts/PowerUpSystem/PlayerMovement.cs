@@ -23,6 +23,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float gravityModifier = -9.81f;
 
+
+    public float jumpIncreaser = 0; 
+
     [SerializeField] private float jumpHight = 7;
 
     [SerializeField] private bool defending = false;
@@ -146,7 +149,7 @@ public class PlayerMovement : MonoBehaviour
     private void jump()
     {
 
-        velocity.y = Mathf.Sqrt(jumpHight * -2 * gravityModifier);
+        velocity.y = Mathf.Sqrt((jumpHight + jumpIncreaser) * -2 * gravityModifier);
 
     }
     private IEnumerator Attack()
