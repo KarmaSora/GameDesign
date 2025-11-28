@@ -8,6 +8,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float enemySpeed = 3.0f;      // meters per second
     [SerializeField] private float rotationSpeed = 5.0f;   // how fast to turn toward player
 
+    [Header("Detection Settings")]
+    [SerializeField] private float detectionRadius = 10f;  // how close the player must be before enemy starts moving
+
     [Header("References")]
     [SerializeField] private Rigidbody enemyRB;
     [SerializeField] private Transform player;
@@ -61,8 +64,20 @@ public class Enemy : MonoBehaviour
         Vector3 toPlayer = player.position - transform.position;
         toPlayer.y = 0f; // keep movement flat on the ground
 
-        if (toPlayer.sqrMagnitude < 0.0001f)
-            return; // already on top of the player
+        float sqrDistanceToPlayer = toPlayer.sqrMagnitude;
+        float sqrDetectionRadius = detectionRadius * detectionRadius;
+
+        // If the player is outside detection range, do not move
+        if (sqrDistanceToPlayer > sqrDetectionRadius)
+        {
+            // Optional: ensure Rigidbody does not keep drifting
+            enemyRB.velocity = Vector3.zero;
+            return;
+        }
+
+        // If very close, avoid jitter and do nothing
+        if (sqrDistanceToPlayer < 0.0001f)
+            return; // already basically on top of the player
 
         Vector3 direction = toPlayer.normalized;
 
@@ -72,8 +87,11 @@ public class Enemy : MonoBehaviour
 
         // 3. Rotate to face the player smoothly
         Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-        Quaternion newRotation = Quaternion.Slerp(enemyRB.rotation, targetRotation,
-                                                  rotationSpeed * Time.fixedDeltaTime);
+        Quaternion newRotation = Quaternion.Slerp(
+            enemyRB.rotation,
+            targetRotation,
+            rotationSpeed * Time.fixedDeltaTime
+        );
         enemyRB.MoveRotation(newRotation);
 
         // 4. Optional: destroy if it falls off the world
@@ -81,5 +99,12 @@ public class Enemy : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    // Visualize detection radius in the Scene view
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }
