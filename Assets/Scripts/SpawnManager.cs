@@ -1,19 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class SpawnManager : MonoBehaviour
 {
-    [Header("Prefabs")]
     public GameObject enemyPrefab;
+
     public GameObject[] powerUpPrefabs;
 
-    [Header("Spawn Settings")]
-    [SerializeField] private Transform[] spawnPoints;
-    [SerializeField] private float spawnRadius = 2f;   // Random radius around each spawn point
+    public float spawnRange = 9;
+
+    public int enemyCount;
 
     public int waveNumber = 1;
-    private int enemyCount;
+
+    [SerializeField] private int maxWaves = 5;   // NEW — limit number of waves
 
     void Start()
     {
@@ -27,17 +29,33 @@ public class SpawnManager : MonoBehaviour
 
         if (enemyCount == 0)
         {
-            spawnEnemyWave(waveNumber++);
-            SpawnRandomPowerup();
+            if (waveNumber <= maxWaves)
+            {
+                spawnEnemyWave(waveNumber);
+                SpawnRandomPowerup();
+                waveNumber++;
+            }
+            else
+            {
+                // No more waves beyond the configured maximum
+                Debug.Log("All waves completed!");
+            }
         }
     }
 
-    void spawnEnemyWave(int enemiesToSpawn = 3)
+    void spawnEnemyWave(int enemiesTOSpawn = 3)
     {
-        for (int i = 0; i < enemiesToSpawn; i++)
+        for (int i = 0; i < enemiesTOSpawn; i++)
         {
-            Instantiate(enemyPrefab, GetSpawnPosition(), enemyPrefab.transform.rotation);
+            Instantiate(enemyPrefab, generateSpawnPos(), enemyPrefab.transform.rotation);
         }
+    }
+
+    private Vector3 generateSpawnPos()
+    {
+        float spawnXPos = Random.Range(-spawnRange, spawnRange);
+        float spawnZPos = Random.Range(-spawnRange, spawnRange);
+        return new Vector3(spawnXPos, 0, spawnZPos);
     }
 
     private void SpawnRandomPowerup()
@@ -57,41 +75,6 @@ public class SpawnManager : MonoBehaviour
             return;
         }
 
-        Instantiate(selectedPowerup, GetSpawnPosition(), selectedPowerup.transform.rotation);
-    }
-
-    // -------------------------------
-    // SPAWN POINT SYSTEM
-    // -------------------------------
-
-    private Transform GetRandomSpawnPoint()
-    {
-        if (spawnPoints == null || spawnPoints.Length == 0)
-        {
-            Debug.LogError("SpawnManager: No spawn points assigned!");
-            return null;
-        }
-
-        int index = Random.Range(0, spawnPoints.Length);
-        return spawnPoints[index];
-    }
-
-    // Returns a position within 'spawnRadius' meters of a random spawn point
-    private Vector3 GetSpawnPosition()
-    {
-        Transform t = GetRandomSpawnPoint();
-        if (t == null)
-        {
-            return Vector3.zero;
-        }
-
-        // 2D random offset on XZ plane
-        Vector2 circle = Random.insideUnitCircle * spawnRadius;
-
-        return new Vector3(
-            t.position.x + circle.x,
-            t.position.y,
-            t.position.z + circle.y
-        );
+        Instantiate(selectedPowerup, generateSpawnPos(), selectedPowerup.transform.rotation);
     }
 }

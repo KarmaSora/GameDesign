@@ -3812,12 +3812,10 @@ MonoBehaviour:
   - {fileID: 8048994776418730044, guid: 61637ecb3219faf4f9570ae1c662c68e, type: 3}
   - {fileID: 8670903240314919602, guid: 1849b10ef74d1b54394e2da35be456be, type: 3}
   - {fileID: 6702517199473214620, guid: 2c2528c65df99344f8e3ffcbf41d90d7, type: 3}
-  spawnPoints:
-  - {fileID: 234288666}
-  - {fileID: 735651977}
-  - {fileID: 1851530274}
-  spawnRadius: 2
+  spawnRange: 9
+  enemyCount: 0
   waveNumber: 1
+  maxWaves: 2
 --- !u!1 &1698099535
 GameObject:
   m_ObjectHideFlags: 0
