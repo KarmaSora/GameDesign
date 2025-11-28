@@ -67,7 +67,17 @@ public class PlayerLife : MonoBehaviour
         {
             Debug.Log("Game Over. No lives remaining.");
             // Here you can instead trigger a Game Over screen or reload the scene.
-            Destroy(gameObject);
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.GameOver();
+            }
+            else
+            {
+                Debug.LogWarning("PlayerLife: No GameManager found, destroying player as fallback.");
+                Destroy(gameObject);
+            }
+
+
         }
     }
 
