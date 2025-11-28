@@ -4,14 +4,26 @@ using UnityEngine;
 
 public class Powerup : MonoBehaviour
 {
-    // Start is called before the first frame update
     public PowerupEffect powerupEffect;
+
     private void OnTriggerEnter(Collider other)
     {
-        //add check if its a player or enemy
+        // Only the player should pick up powerups
+        if (!other.CompareTag("Player"))
+        {
+            return;
+        }
 
-        Destroy(gameObject);
+        if (powerupEffect == null)
+        {
+            Debug.LogWarning("Powerup: powerupEffect is not assigned on " + gameObject.name);
+            return;
+        }
+
+        // Apply effect to the player
         powerupEffect.Apply(other.gameObject);
-    }
 
+        // Then destroy the pickup
+        Destroy(gameObject);
+    }
 }

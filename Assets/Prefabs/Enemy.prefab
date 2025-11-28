@@ -1149,8 +1149,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c8c1626b52930409a4af409b87662a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemySpeed: 0
-  rotationSpeed: 0
+  enemySpeed: 2
+  rotationSpeed: 3
+  detectionRadius: 10
+  limitToHomeRadius: 1
+  homeRadius: 12
+  xpReward: 25
   enemyRB: {fileID: 0}
   player: {fileID: 0}
 --- !u!1 &5716592795069024829

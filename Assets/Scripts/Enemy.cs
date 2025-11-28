@@ -5,19 +5,32 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float enemySpeed = 3.0f;      // meters per second
-    [SerializeField] private float rotationSpeed = 5.0f;   // how fast to turn toward player
+    [SerializeField] private float enemySpeed = 3.0f;
+    [SerializeField] private float rotationSpeed = 5.0f;
 
     [Header("Detection Settings")]
-    [SerializeField] private float detectionRadius = 10f;  // how close the player must be before enemy starts moving
+    [SerializeField] private float detectionRadius = 10f;
+
+    [Header("Area Limits")]
+    [SerializeField] private bool limitToHomeRadius = true;
+    [SerializeField] private float homeRadius = 12f;
+
+    [Header("XP Settings")]
+    [SerializeField] private int xpReward = 25;
 
     [Header("References")]
     [SerializeField] private Rigidbody enemyRB;
     [SerializeField] private Transform player;
 
+    private Vector3 homePosition;
+
+    public int XPReward
+    {
+        get { return xpReward; }
+    }
+
     private void Awake()
     {
-        // Make sure we have a Rigidbody
         if (enemyRB == null)
         {
             enemyRB = GetComponent<Rigidbody>();
@@ -29,7 +42,6 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            // Prevent tipping over: only allow rotation around Y
             enemyRB.freezeRotation = false;
             enemyRB.constraints =
                 RigidbodyConstraints.FreezeRotationX |
@@ -39,8 +51,6 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        // Find the player by tag (recommended):
-        // Make sure your player GameObject has the tag "Player"
         if (player == null)
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -48,11 +58,9 @@ public class Enemy : MonoBehaviour
             {
                 player = playerObj.transform;
             }
-            else
-            {
-                Debug.LogError("Enemy: No GameObject with tag 'Player' found in the scene.");
-            }
         }
+
+        homePosition = transform.position;
     }
 
     private void FixedUpdate()
@@ -60,32 +68,46 @@ public class Enemy : MonoBehaviour
         if (enemyRB == null || player == null)
             return;
 
-        // 1. Calculate direction on the XZ-plane only (ignore height difference)
         Vector3 toPlayer = player.position - transform.position;
-        toPlayer.y = 0f; // keep movement flat on the ground
+        toPlayer.y = 0f;
 
         float sqrDistanceToPlayer = toPlayer.sqrMagnitude;
         float sqrDetectionRadius = detectionRadius * detectionRadius;
 
-        // If the player is outside detection range, do not move
         if (sqrDistanceToPlayer > sqrDetectionRadius)
         {
-            // Optional: ensure Rigidbody does not keep drifting
             enemyRB.velocity = Vector3.zero;
             return;
         }
 
-        // If very close, avoid jitter and do nothing
         if (sqrDistanceToPlayer < 0.0001f)
-            return; // already basically on top of the player
+            return;
 
         Vector3 direction = toPlayer.normalized;
 
-        // 2. Move towards the player with constant speed
         Vector3 targetPosition = enemyRB.position + direction * enemySpeed * Time.fixedDeltaTime;
+
+        if (limitToHomeRadius)
+        {
+            Vector3 offsetFromHome = targetPosition - homePosition;
+            offsetFromHome.y = 0f;
+
+            float sqrHomeRadius = homeRadius * homeRadius;
+
+            if (offsetFromHome.sqrMagnitude > sqrHomeRadius)
+            {
+                offsetFromHome = offsetFromHome.normalized * homeRadius;
+
+                targetPosition = new Vector3(
+                    homePosition.x + offsetFromHome.x,
+                    targetPosition.y,
+                    homePosition.z + offsetFromHome.z
+                );
+            }
+        }
+
         enemyRB.MovePosition(targetPosition);
 
-        // 3. Rotate to face the player smoothly
         Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
         Quaternion newRotation = Quaternion.Slerp(
             enemyRB.rotation,
@@ -94,17 +116,22 @@ public class Enemy : MonoBehaviour
         );
         enemyRB.MoveRotation(newRotation);
 
-        // 4. Optional: destroy if it falls off the world
         if (transform.position.y < -10f)
         {
             Destroy(gameObject);
         }
     }
 
-    // Visualize detection radius in the Scene view
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
+
+        if (limitToHomeRadius)
+        {
+            Gizmos.color = Color.blue;
+            Vector3 center = Application.isPlaying ? homePosition : transform.position;
+            Gizmos.DrawWireSphere(center, homeRadius);
+        }
     }
 }
