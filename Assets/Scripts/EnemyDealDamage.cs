@@ -48,18 +48,29 @@ public class EnemyDealDamage : MonoBehaviour
             return;
         }
 
+        // Check if player is blocking
+        PlayerMovement playerMovement = other.GetComponent<PlayerMovement>();
+        if (playerMovement != null && playerMovement.IsBlocking)
+        {
+            Debug.Log("Enemy attack was blocked by the player.");
+            // Enemy still "used" an attack, so start cooldown
+            lastAttackTime = Time.time;
+            return;
+        }
+
         // Get HealthSystem on the player
         HealthSystem playerHealth = other.GetComponent<HealthSystem>();
 
         if (playerHealth == null)
         {
-            Debug.LogWarning($"Object tagged {playerTag} has no HealthSystem: {other.name}");
+            Debug.LogWarning("Object tagged " + playerTag + " has no HealthSystem: " + other.name);
             return;
         }
 
         playerHealth.TakeDamage(damage);
         lastAttackTime = Time.time;
 
-        Debug.Log($"Enemy '{gameObject.name}' dealt {damage} damage to '{other.name}'. '{other.name}' ");
+        Debug.Log("Enemy '" + gameObject.name + "' dealt " + damage + " damage to '" + other.name + "'.");
     }
+
 }

@@ -58,20 +58,25 @@ public class PlayerMovement : MonoBehaviour
         Move();
 
 
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (!isBlocking && Input.GetKeyDown(KeyCode.Mouse0))
         {
             StartCoroutine(Attack());
             
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKey(KeyCode.Mouse1))
         {
-            //StartCoroutine(useShield());
-            //HandleBlockInput();  // <<< NEW
-            StartCoroutine(HandleBlockInput());
-
-
-
+            if (!isBlocking)
+            {
+                StartBlock();
+            }
+        }
+        else
+        {
+            if (isBlocking)
+            {
+                StopBlock();
+            }
         }
 
     }
@@ -178,35 +183,21 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-
-    private IEnumerator HandleBlockInput()
-    {
-        // Right mouse button held = block
-        animator.SetLayerWeight(animator.GetLayerIndex("Attack Layer"), 1);
-        if (!isBlocking)
-        {
-            StartBlock();
-        }
-        else 
-        {
-            StopBlock();
-        }
-        yield return new WaitForSeconds(0.9f);
-        animator.SetLayerWeight(animator.GetLayerIndex("Attack Layer"), 0);
-    }
-
     private void StartBlock()
     {
         isBlocking = true;
 
-        // Tell Animator to play block pose/animation
         if (animator != null)
         {
             animator.SetBool("isBlocking", true);
-        }
 
-        // Optional: you can slow movement while blocking, disable attacks, etc.
-        // Example: playerMoveSpeed = walkSpeed; 
+            // If you use a specific layer for block animations, enable it here
+            int attackLayerIndex = animator.GetLayerIndex("Attack Layer");
+            if (attackLayerIndex >= 0)
+            {
+                animator.SetLayerWeight(attackLayerIndex, 1f);
+            }
+        }
     }
 
     private void StopBlock()
@@ -216,10 +207,16 @@ public class PlayerMovement : MonoBehaviour
         if (animator != null)
         {
             animator.SetBool("isBlocking", false);
-        }
 
-        // Optional: restore movement values, re-enable attacks, etc.
+            int attackLayerIndex = animator.GetLayerIndex("Attack Layer");
+            if (attackLayerIndex >= 0)
+            {
+                animator.SetLayerWeight(attackLayerIndex, 0f);
+            }
+        }
     }
+
+
 
     // Public read-only accessor so other scripts can check if we’re blocking
     public bool IsBlocking

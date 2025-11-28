@@ -5511,6 +5511,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5098489412474125311, guid: e04eaa1219ea36c4e9cbc9b96999a126,
+        type: 3}
+      propertyPath: attackCooldown
+      value: 1.7
+      objectReference: {fileID: 0}
     - target: {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126,
         type: 3}
       propertyPath: m_Name
