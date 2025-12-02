@@ -1,21 +1,38 @@
+using System; // NEW: for Action<>
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+
+
 
 public class HealthSystem : MonoBehaviour
 {
     [SerializeField] public float currentHealth;
     [SerializeField] private float maxHealth = 100f;
 
+    // NEW: UI / other systems can subscribe to this
+    // (currentHealth, maxHealth)
+    public event Action<float, float> OnHealthChanged;
+
     private void Awake()
     {
         currentHealth = maxHealth;
+
+        // NEW: tell listeners the initial values
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     // Classic getter for maxHealth
     public float MaxHealth
     {
         get { return maxHealth; }
+    }
+
+    // Optional read-only helper (does not replace currentHealth!)
+    public float CurrentHealth
+    {
+        get { return currentHealth; }
     }
 
     // Allows external scripts (PlayerStats, Powerups, etc.) to change max HP
@@ -33,6 +50,9 @@ public class HealthSystem : MonoBehaviour
         }
 
         Debug.Log(gameObject.name + " new max health: " + maxHealth + ", current: " + currentHealth);
+
+        // NEW: notify listeners
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     public void Heal(float amount)
@@ -41,6 +61,9 @@ public class HealthSystem : MonoBehaviour
 
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
         Debug.Log(gameObject.name + " healed. Health: " + currentHealth + "/" + maxHealth);
+
+        // NEW: notify listeners
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     public void TakeDamage(float damage)
@@ -49,6 +72,9 @@ public class HealthSystem : MonoBehaviour
 
         currentHealth -= damage;
         Debug.Log(gameObject.name + " Health: " + currentHealth);
+
+        // NEW: notify listeners
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
         if (currentHealth <= 0.0f)
         {
@@ -111,5 +137,12 @@ public class HealthSystem : MonoBehaviour
 
         // CASE 3: Anything else -> just destroy
         Destroy(gameObject);
+    }
+
+    // NEW: helper, nice for sliders
+    public float GetHealthNormalized()
+    {
+        if (maxHealth <= 0f) return 0f;
+        return currentHealth / maxHealth;
     }
 }
