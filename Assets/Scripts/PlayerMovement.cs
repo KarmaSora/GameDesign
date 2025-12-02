@@ -14,9 +14,9 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float playerMoveSpeed;
 
-    public float moveSpeedIncreaser =0;
-    [SerializeField] private float walkSpeed = 5 ;
-    [SerializeField] private float runSpeed = 10 ;
+    public float moveSpeedIncreaser =1;
+    [SerializeField] private float walkSpeed = 2 ;
+    [SerializeField] private float runSpeed = 5 ;
 
     [SerializeField] private bool isGrounded;
     //[SerializeField] private float groundCheckDistance;
@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float jumpIncreaser = 0; 
 
-    [SerializeField] private float jumpHight = 7;
+    [SerializeField] private float jumpHight = 3;
 
     [SerializeField] private bool defending = false;
 

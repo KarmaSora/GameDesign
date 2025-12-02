@@ -8,7 +8,7 @@ public class PlayerLife : MonoBehaviour
     [SerializeField] private int startingLives = 3;
 
     // If the player falls below this Y value, they lose a life and respawn
-    [SerializeField] private float fallThreshold = -10f;
+    [SerializeField] private float fallThreshold = -60f;
 
     private int currentLives;
     private Vector3 respawnPosition;

@@ -1,68 +1,107 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject enemyPrefab;
+    [Header("Enemy Spawning")]
+    [Tooltip("List of enemy prefabs to spawn from. A random one will be chosen for each enemy.")]
+    [SerializeField] private GameObject[] enemyPrefabs;
 
-    public GameObject[] powerUpPrefabs;
+    [Header("Powerup Spawning")]
+    [Tooltip("List of powerup prefabs to spawn from. A random one will be chosen each wave.")]
+    [SerializeField] private GameObject[] powerUpPrefabs;
 
-    public float spawnRange = 9;
+    [Header("Spawn Settings")]
+    [Tooltip("Radius around this GameObject's position where enemies and powerups can spawn.")]
+    [SerializeField] private float spawnRange = 9f;
 
-    public int enemyCount;
+    [Tooltip("Maximum number of waves to spawn.")]
+    [SerializeField] private int maxWaves = 5;
 
+    [Header("Runtime Info (read-only)")]
+    public int enemyCount;   // Only enemies this spawner has spawned
     public int waveNumber = 1;
 
-    [SerializeField] private int maxWaves = 5;   // NEW — limit number of waves
+    // Internal list tracking ONLY enemies spawned by THIS SpawnManager
+    private readonly List<GameObject> spawnedEnemies = new List<GameObject>();
 
-    void Start()
+    private void Start()
     {
-        spawnEnemyWave(waveNumber);
+        SpawnEnemyWave(waveNumber);
         SpawnRandomPowerup();
     }
 
-    void Update()
+    private void Update()
     {
-        enemyCount = FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length;
+        // Clean up any entries where the enemy has been destroyed (becomes null)
+        spawnedEnemies.RemoveAll(e => e == null);
+
+        // Count how many enemies spawned by THIS spawner are still alive
+        enemyCount = spawnedEnemies.Count;
 
         if (enemyCount == 0)
         {
             if (waveNumber <= maxWaves)
             {
-                spawnEnemyWave(waveNumber);
+                SpawnEnemyWave(waveNumber);
                 SpawnRandomPowerup();
                 waveNumber++;
             }
             else
             {
-                // No more waves beyond the configured maximum
-                Debug.Log("All waves completed!");
+                Debug.Log($"SpawnManager ({name}): All waves completed!");
             }
         }
     }
 
-    void spawnEnemyWave(int enemiesTOSpawn = 3)
+    private void SpawnEnemyWave(int enemiesToSpawn = 3)
     {
-        for (int i = 0; i < enemiesTOSpawn; i++)
+        if (enemyPrefabs == null || enemyPrefabs.Length == 0)
         {
-            Instantiate(enemyPrefab, generateSpawnPos(), enemyPrefab.transform.rotation);
+            Debug.LogWarning($"SpawnManager ({name}): No enemyPrefabs assigned!");
+            return;
+        }
+
+        for (int i = 0; i < enemiesToSpawn; i++)
+        {
+            // Pick a random enemy prefab from the list
+            GameObject enemyPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
+
+            if (enemyPrefab == null)
+            {
+                Debug.LogWarning($"SpawnManager ({name}): Selected enemy prefab is null, skipping spawn.");
+                continue;
+            }
+
+            Vector3 spawnPos = GenerateSpawnPos();
+            GameObject enemyInstance = Instantiate(enemyPrefab, spawnPos, enemyPrefab.transform.rotation);
+
+            // Track this instance so only enemies from THIS spawner are counted
+            spawnedEnemies.Add(enemyInstance);
         }
     }
 
-    private Vector3 generateSpawnPos()
+    // Generates a random position within 'spawnRange' around THIS object's position
+    private Vector3 GenerateSpawnPos()
     {
-        float spawnXPos = Random.Range(-spawnRange, spawnRange);
-        float spawnZPos = Random.Range(-spawnRange, spawnRange);
-        return new Vector3(spawnXPos, 0, spawnZPos);
+        float spawnXOffset = Random.Range(-spawnRange, spawnRange);
+        float spawnZOffset = Random.Range(-spawnRange, spawnRange);
+
+        Vector3 center = transform.position;
+
+        return new Vector3(
+            center.x + spawnXOffset,
+            center.y,
+            center.z + spawnZOffset
+        );
     }
 
     private void SpawnRandomPowerup()
     {
         if (powerUpPrefabs == null || powerUpPrefabs.Length == 0)
         {
-            Debug.LogWarning("SpawnManager: No powerUpPrefabs assigned!");
+            Debug.LogWarning($"SpawnManager ({name}): No powerUpPrefabs assigned!");
             return;
         }
 
@@ -71,10 +110,18 @@ public class SpawnManager : MonoBehaviour
 
         if (selectedPowerup == null)
         {
-            Debug.LogWarning("SpawnManager: Selected powerup prefab is null at index " + index);
+            Debug.LogWarning($"SpawnManager ({name}): Selected powerup prefab is null at index {index}");
             return;
         }
 
-        Instantiate(selectedPowerup, generateSpawnPos(), selectedPowerup.transform.rotation);
+        Vector3 spawnPos = GenerateSpawnPos();
+        Instantiate(selectedPowerup, spawnPos, selectedPowerup.transform.rotation);
+    }
+
+    // Draw a wire sphere in the Scene view to visualize the spawn range around this object
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, spawnRange);
     }
 }
