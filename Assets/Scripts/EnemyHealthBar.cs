@@ -1,8 +1,6 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class EnemyHealthBar : MonoBehaviour
@@ -10,23 +8,46 @@ public class EnemyHealthBar : MonoBehaviour
     [Header("References")]
     [SerializeField] private HealthSystem healthSystem;
     [SerializeField] private Slider healthSlider;
-    [SerializeField] private Transform target;   // usually the enemy root transform
 
-    [Header("Positioning")]
-    [SerializeField] private Vector3 offset = new Vector3(0f, 2f, 0f); // height above enemy
+    // Optional: if you still want a transform fallback (not required anymore)
+    [SerializeField] private Transform target;
+
+    [Header("Collider Positioning")]
+    [Tooltip("Collider whose top will be used as the base position for the health bar.")]
+    [SerializeField] private Collider targetCollider;
+
+    [Tooltip("Extra height above the top of the collider in world units.")]
+    [SerializeField] private float heightOffset = 0.5f;
 
     [Header("Billboarding")]
     [SerializeField] private Camera mainCamera;
 
     private void Awake()
     {
-        // Fallbacks to make setup easier
+        // Camera fallback
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
         }
 
-        if (healthSystem != null && target == null)
+        // If health system not set, try to find it on parent
+        if (healthSystem == null)
+        {
+            healthSystem = GetComponentInParent<HealthSystem>();
+        }
+
+        // Auto-find collider on the same object as the HealthSystem (or its parent)
+        if (targetCollider == null && healthSystem != null)
+        {
+            targetCollider = healthSystem.GetComponent<Collider>();
+            if (targetCollider == null)
+            {
+                targetCollider = healthSystem.GetComponentInChildren<Collider>();
+            }
+        }
+
+        // Optional fallback: if no collider, use the health system transform
+        if (target == null && healthSystem != null)
         {
             target = healthSystem.transform;
         }
@@ -53,7 +74,6 @@ public class EnemyHealthBar : MonoBehaviour
 
         // Initialize bar to current health
         HandleHealthChanged(healthSystem.currentHealth, healthSystem.MaxHealth);
-        // or: HandleHealthChanged(healthSystem.CurrentHealth, healthSystem.MaxHealth);
     }
 
     private void OnDestroy()
@@ -66,20 +86,40 @@ public class EnemyHealthBar : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (target == null) return;
+        // 1. Compute base position: top of collider if available
+        Vector3 basePosition;
 
-        // Follow enemy
-        transform.position = target.position + offset;
+        if (targetCollider != null)
+        {
+            Bounds b = targetCollider.bounds;
 
-        // Face the camera (billboard)
+            // Top of the collider (x,z from center, y from max)
+            basePosition = new Vector3(b.center.x, b.max.y, b.center.z);
+        }
+        else if (target != null)
+        {
+            // Fallback: just use the target transform
+            basePosition = target.position;
+        }
+        else
+        {
+            return; // nothing to follow
+        }
+
+        // 2. Add a small vertical offset so it floats above the collider
+        basePosition += Vector3.up * heightOffset;
+
+        // 3. Move the health bar object
+        transform.position = basePosition;
+
+        // 4. Billboard toward the camera
         if (mainCamera != null)
         {
-            Vector3 direction = transform.position - mainCamera.transform.position;
-            transform.rotation = Quaternion.LookRotation(direction);
+            Vector3 dir = transform.position - mainCamera.transform.position;
+            transform.rotation = Quaternion.LookRotation(dir);
         }
     }
 
-    // This was the missing method
     private void HandleHealthChanged(float current, float max)
     {
         if (healthSlider == null || max <= 0f) return;
