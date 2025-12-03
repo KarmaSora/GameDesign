@@ -331,7 +331,7 @@ Transform:
   m_GameObject: {fileID: 6980679030721307758}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.951661, y: -1.9871845, z: -3.71312}
+  m_LocalPosition: {x: 0.951661, y: -2.56, z: -3.71312}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -369,7 +369,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 2.98}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5386624080801210814}
@@ -444,8 +444,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5.5417223, y: 8.77467, z: 7.5537186}
-  m_Center: {x: 0.037280798, y: 3.887333, z: 0.4647349}
+  m_Size: {x: 5.5417223, y: 8.77467, z: 8.356974}
+  m_Center: {x: 0.03728083, y: 3.887333, z: 0.86636376}
 --- !u!114 &6487301263765973014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -559,6 +559,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 20
   attackCooldown: 5
+  windupTime: 0.4
+  hitRange: 2
+  enemyRenderer: {fileID: 7240764853453573740}
+  idleColor: {r: 1, g: 1, b: 1, a: 1}
+  windupColor: {r: 1, g: 0, b: 0, a: 1}
   playerTag: Player
 --- !u!65 &5985789146897462286
 BoxCollider:

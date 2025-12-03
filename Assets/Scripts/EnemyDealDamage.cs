@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyDealDamage : MonoBehaviour
@@ -7,37 +6,77 @@ public class EnemyDealDamage : MonoBehaviour
     [Header("Damage Settings")]
     [SerializeField] private float damage = 10f;
 
-    // Time between hits when the player stays in the trigger
+    [Tooltip("Time between finished attacks.")]
     [SerializeField] private float attackCooldown = 1.0f;
 
-    // Tag of the player object
+    [Header("Attack Telegraph")]
+    [Tooltip("How long the enemy warns before dealing damage.")]
+    [SerializeField] private float windupTime = 0.4f;
+
+    [Tooltip("How far from this object the hit is allowed to connect.")]
+    [SerializeField] private float hitRange = 2.0f;
+
+    [Tooltip("Renderer that will change color during windup.")]
+    [SerializeField] private Renderer enemyRenderer;
+
+    [SerializeField] private Color idleColor = Color.white;
+    [SerializeField] private Color windupColor = Color.red;
+
+    [Header("Player Detection")]
     [SerializeField] private string playerTag = "Player";
 
     private float lastAttackTime = -999f;
+    private bool isAttacking = false;
 
-    private void OnTriggerEnter(Collider other)
+    private void Awake()
     {
-        GameObject gameObj = other.gameObject;
-        gameObj.CompareTag(playerTag);
-        if (gameObj.CompareTag(playerTag))
+        // Try to auto find a Renderer if none has been assigned
+        if (enemyRenderer == null)
         {
+            enemyRenderer = GetComponent<Renderer>();
+        }
 
-        Debug.Log("Enemy trigger ENTER with: " + other.name);
-        TryDealDamage(other);
+        if (enemyRenderer == null)
+        {
+            enemyRenderer = GetComponentInChildren<Renderer>();
+        }
 
+        if (enemyRenderer == null)
+        {
+            enemyRenderer = GetComponentInParent<Renderer>();
+        }
+
+        if (enemyRenderer == null)
+        {
+            Debug.LogWarning("EnemyDealDamage: No Renderer found for telegraph on " + gameObject.name);
+        }
+        else
+        {
+            // Make sure we start with idle color
+            enemyRenderer.material.color = idleColor;
         }
     }
 
-   
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        TryDealDamage(other);
+        TryStartAttack(other);
     }
 
-    private void TryDealDamage(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        // Only hit the player
+        TryStartAttack(other);
+    }
+
+    private void TryStartAttack(Collider other)
+    {
+        // Only care about the player
         if (!other.CompareTag(playerTag))
+        {
+            return;
+        }
+
+        // Already doing an attack right now
+        if (isAttacking)
         {
             return;
         }
@@ -48,29 +87,89 @@ public class EnemyDealDamage : MonoBehaviour
             return;
         }
 
-        // Check if player is blocking
+        // Start one attack sequence
+        StartCoroutine(AttackRoutine(other));
+    }
+
+    private IEnumerator AttackRoutine(Collider other)
+    {
+        isAttacking = true;
+        lastAttackTime = Time.time;
+
+        // 1. Telegraph phase: change color
+        SetTelegraphColor(true);
+
+        float timer = 0f;
+        while (timer < windupTime)
+        {
+            // If the player left during windup, cancel the attack
+            if (other == null || !other.CompareTag(playerTag))
+            {
+                SetTelegraphColor(false);
+                isAttacking = false;
+                yield break;
+            }
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        // End telegraph color
+        SetTelegraphColor(false);
+
+        // 2. Attack phase
+        if (other == null || !other.CompareTag(playerTag))
+        {
+            isAttacking = false;
+            yield break;
+        }
+
+        float distance = Vector3.Distance(transform.position, other.transform.position);
+        if (distance > hitRange)
+        {
+            // Player dodged
+            isAttacking = false;
+            yield break;
+        }
+
+        // Check block
         PlayerMovement playerMovement = other.GetComponent<PlayerMovement>();
         if (playerMovement != null && playerMovement.IsBlocking)
         {
             Debug.Log("Enemy attack was blocked by the player.");
-            // Enemy still "used" an attack, so start cooldown
-            lastAttackTime = Time.time;
-            return;
+            isAttacking = false;
+            yield break;
         }
 
-        // Get HealthSystem on the player
+        // Deal damage
         HealthSystem playerHealth = other.GetComponent<HealthSystem>();
-
         if (playerHealth == null)
         {
-            Debug.LogWarning("Object tagged " + playerTag + " has no HealthSystem: " + other.name);
-            return;
+            Debug.LogWarning("EnemyDealDamage: Player has no HealthSystem component.");
+            isAttacking = false;
+            yield break;
         }
 
         playerHealth.TakeDamage(damage);
-        lastAttackTime = Time.time;
-
         Debug.Log("Enemy '" + gameObject.name + "' dealt " + damage + " damage to '" + other.name + "'.");
+
+        isAttacking = false;
     }
 
+    private void SetTelegraphColor(bool isWindup)
+    {
+        if (enemyRenderer == null)
+        {
+            return;
+        }
+
+        if (isWindup)
+        {
+            enemyRenderer.material.color = windupColor;
+        }
+        else
+        {
+            enemyRenderer.material.color = idleColor;
+        }
+    }
 }

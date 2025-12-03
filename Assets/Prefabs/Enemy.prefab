@@ -235,6 +235,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   attackCooldown: 1.7
+  windupTime: 0.4
+  hitRange: 2
+  enemyRenderer: {fileID: 6988214932827059580}
+  idleColor: {r: 1, g: 1, b: 1, a: 1}
+  windupColor: {r: 1, g: 0, b: 0, a: 1}
   playerTag: Player
 --- !u!1 &1613970202196038628
 GameObject:
