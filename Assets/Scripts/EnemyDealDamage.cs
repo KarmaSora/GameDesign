@@ -24,6 +24,7 @@ public class EnemyDealDamage : MonoBehaviour
 
     [Header("Player Detection")]
     [SerializeField] private string playerTag = "Player";
+    [SerializeField] private string deathbarrier = "DeathBarrier";
 
     private float lastAttackTime = -999f;
     private bool isAttacking = false;
@@ -31,29 +32,34 @@ public class EnemyDealDamage : MonoBehaviour
     private void Awake()
     {
         // Try to auto find a Renderer if none has been assigned
-        if (enemyRenderer == null)
-        {
-            enemyRenderer = GetComponent<Renderer>();
-        }
 
-        if (enemyRenderer == null)
+        if (!gameObject.CompareTag(deathbarrier))
         {
-            enemyRenderer = GetComponentInChildren<Renderer>();
-        }
 
-        if (enemyRenderer == null)
-        {
-            enemyRenderer = GetComponentInParent<Renderer>();
-        }
+            if (enemyRenderer == null)
+            {
+                enemyRenderer = GetComponent<Renderer>();
+            }
 
-        if (enemyRenderer == null)
-        {
-            Debug.LogWarning("EnemyDealDamage: No Renderer found for telegraph on " + gameObject.name);
-        }
-        else
-        {
-            // Make sure we start with idle color
-            enemyRenderer.material.color = idleColor;
+            if (enemyRenderer == null)
+            {
+                enemyRenderer = GetComponentInChildren<Renderer>();
+            }
+
+            if (enemyRenderer == null)
+            {
+                enemyRenderer = GetComponentInParent<Renderer>();
+            }
+
+            if (enemyRenderer == null)
+            {
+                Debug.LogWarning("EnemyDealDamage: No Renderer found for telegraph on " + gameObject.name);
+            }
+            else
+            {
+                // Make sure we start with idle color
+                enemyRenderer.material.color = idleColor;
+            }
         }
     }
 
