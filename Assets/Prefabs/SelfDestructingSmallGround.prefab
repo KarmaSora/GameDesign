@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 7122238677235334655}
   - component: {fileID: 2055759001576976512}
   - component: {fileID: 5833210659525456596}
-  - component: {fileID: 5548727499593542099}
-  - component: {fileID: 9032522999787464034}
   - component: {fileID: 2195222585724728611}
   m_Layer: 0
   m_Name: SelfDestructingSmallGround
@@ -109,45 +107,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 8878a37eb67ddac4ead51890a31d6a18, type: 3}
---- !u!65 &5548727499593542099
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7566756773913313442}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 5.774557, y: 4.5991006, z: 5.0001826}
-  m_Center: {x: -0.0000015497208, y: -2.7310221, z: 0}
---- !u!114 &9032522999787464034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7566756773913313442}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86f3fb2d78359f64cab2bb08d8a559a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggeredColor: {r: 1, g: 0, b: 0, a: 1}
-  fallDelay: 4
-  destroyAfterFall: 1
-  destroyAfterFallDelay: 5
-  groundRenderer: {fileID: 0}
-  rb: {fileID: 0}
 --- !u!54 &2195222585724728611
 Rigidbody:
   m_ObjectHideFlags: 0
