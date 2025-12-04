@@ -560,11 +560,12 @@ MonoBehaviour:
   damage: 20
   attackCooldown: 5
   windupTime: 0.4
-  hitRange: 2
+  hitRange: 3
   enemyRenderer: {fileID: 7240764853453573740}
   idleColor: {r: 1, g: 1, b: 1, a: 1}
   windupColor: {r: 1, g: 0, b: 0, a: 1}
   playerTag: Player
+  deathbarrier: DeathBarrier
 --- !u!65 &5985789146897462286
 BoxCollider:
   m_ObjectHideFlags: 0

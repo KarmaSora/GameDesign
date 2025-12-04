@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 2055759001576976512}
   - component: {fileID: 5833210659525456596}
   - component: {fileID: 2195222585724728611}
+  - component: {fileID: 3562575161642109345}
+  - component: {fileID: 2322013461961199517}
   m_Layer: 0
   m_Name: SelfDestructingSmallGround
   m_TagString: Untagged
@@ -28,8 +30,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7566756773913313442}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 77.58, y: 40.81, z: 10.32}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 10.48, y: 2.74, z: 13.29089}
   m_LocalScale: {x: 1.2617999, y: 1.4868, z: 1.12825}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -130,7 +132,46 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3562575161642109345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7566756773913313442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60edb47bc47264d42a2afac3d60093c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggeredColor: {r: 1, g: 0, b: 0, a: 1}
+  fallDelay: 1.5
+  respawn: 0
+  respawnDelay: 3
+  groundRenderer: {fileID: 0}
+  rb: {fileID: 0}
+--- !u!65 &2322013461961199517
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7566756773913313442}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5.774557, y: 4.870354, z: 5.0001826}
+  m_Center: {x: -0.0000015116094, y: -2.5953953, z: 0}

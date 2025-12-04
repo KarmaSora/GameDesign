@@ -32,10 +32,8 @@ public class EnemyDealDamage : MonoBehaviour
     private void Awake()
     {
         // Try to auto find a Renderer if none has been assigned
-
         if (!gameObject.CompareTag(deathbarrier))
         {
-
             if (enemyRenderer == null)
             {
                 enemyRenderer = GetComponent<Renderer>();
@@ -104,6 +102,7 @@ public class EnemyDealDamage : MonoBehaviour
 
         // 1. Telegraph phase: change color
         SetTelegraphColor(true);
+        Debug.Log($"EnemyDealDamage: Telegraph start from {gameObject.name} on {other.name}");
 
         float timer = 0f;
         while (timer < windupTime)
@@ -113,6 +112,7 @@ public class EnemyDealDamage : MonoBehaviour
             {
                 SetTelegraphColor(false);
                 isAttacking = false;
+                Debug.Log("EnemyDealDamage: Attack cancelled during windup (player left trigger).");
                 yield break;
             }
 
@@ -122,24 +122,29 @@ public class EnemyDealDamage : MonoBehaviour
 
         // End telegraph color
         SetTelegraphColor(false);
+        Debug.Log("EnemyDealDamage: Telegraph end, attempting to deal damage.");
 
         // 2. Attack phase
         if (other == null || !other.CompareTag(playerTag))
         {
             isAttacking = false;
+            Debug.Log("EnemyDealDamage: Attack aborted, collider lost or not player.");
             yield break;
         }
 
         float distance = Vector3.Distance(transform.position, other.transform.position);
+        Debug.Log($"EnemyDealDamage: Distance to player = {distance}, hitRange = {hitRange}");
+
         if (distance > hitRange)
         {
             // Player dodged
             isAttacking = false;
+            Debug.Log("EnemyDealDamage: Player out of hitRange, no damage dealt.");
             yield break;
         }
 
-        // Check block
-        PlayerMovement playerMovement = other.GetComponent<PlayerMovement>();
+        // Check block (now using GetComponentInParent)
+        PlayerMovement playerMovement = other.GetComponentInParent<PlayerMovement>();
         if (playerMovement != null && playerMovement.IsBlocking)
         {
             Debug.Log("Enemy attack was blocked by the player.");
@@ -147,17 +152,17 @@ public class EnemyDealDamage : MonoBehaviour
             yield break;
         }
 
-        // Deal damage
-        HealthSystem playerHealth = other.GetComponent<HealthSystem>();
+        // Deal damage (also using GetComponentInParent)
+        HealthSystem playerHealth = other.GetComponentInParent<HealthSystem>();
         if (playerHealth == null)
         {
-            Debug.LogWarning("EnemyDealDamage: Player has no HealthSystem component.");
+            Debug.LogWarning("EnemyDealDamage: Player has no HealthSystem component on this hierarchy.");
             isAttacking = false;
             yield break;
         }
 
         playerHealth.TakeDamage(damage);
-        Debug.Log("Enemy '" + gameObject.name + "' dealt " + damage + " damage to '" + other.name + "'.");
+        Debug.Log("Enemy '" + gameObject.name + "' dealt " + damage + " damage to '" + playerHealth.gameObject.name + "'.");
 
         isAttacking = false;
     }
@@ -178,4 +183,13 @@ public class EnemyDealDamage : MonoBehaviour
             enemyRenderer.material.color = idleColor;
         }
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+
+        // Draw a wire sphere showing the hitRange from this trigger's position
+        Gizmos.DrawWireSphere(transform.position, hitRange);
+    }
+
 }
