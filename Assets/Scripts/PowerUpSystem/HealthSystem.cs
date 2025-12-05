@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
-
 public class HealthSystem : MonoBehaviour
 {
     [SerializeField] public float currentHealth;
@@ -84,6 +82,13 @@ public class HealthSystem : MonoBehaviour
 
     private void Die()
     {
+        // NEW: try dropping a powerup on death (for any object that has the component)
+        PowerupDropOnDeath drop = GetComponent<PowerupDropOnDeath>();
+        if (drop != null)
+        {
+            drop.DropNow();
+        }
+
         // CASE 1: Enemy -> award XP and destroy
         if (CompareTag("Enemy"))
         {

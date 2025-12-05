@@ -482,7 +482,7 @@ Transform:
   m_GameObject: {fileID: 2519878277608741264}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.262, y: 0.1393, z: 0}
+  m_LocalPosition: {x: 0.262, y: 0.014899923, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -560,9 +560,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionZone: {fileID: 6058802258550454349}
-  playerLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
   enemyPrefab: {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126,
     type: 3}
   spawnInterval: 3
@@ -571,7 +568,13 @@ MonoBehaviour:
   - {fileID: 2108378100872942534}
   - {fileID: 5460848405593555190}
   - {fileID: 2902139205972474359}
-  onlySpawnWhileActive: 1
+  snapToGround: 1
+  groundCheckHeight: 5
+  groundCheckDistance: 20
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  spawnedEnemies: []
 --- !u!114 &1845353958053241991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -588,8 +591,13 @@ MonoBehaviour:
   - {fileID: 6702517199473214620, guid: 2c2528c65df99344f8e3ffcbf41d90d7, type: 3}
   - {fileID: 5514390184206021239, guid: 0efc29f494717774a8ccbb7d5076f372, type: 3}
   - {fileID: 8670903240314919602, guid: 1849b10ef74d1b54394e2da35be456be, type: 3}
-  dropChancePerSpawn: 0.43
-  verticalOffset: 0.5
+  dropChanceOnDeath: 0.3
+  snapToGround: 1
+  groundCheckHeight: 5
+  groundCheckDistance: 20
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &2834543590798289514
 GameObject:
   m_ObjectHideFlags: 0
@@ -615,7 +623,7 @@ Transform:
   m_GameObject: {fileID: 2834543590798289514}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.027, y: 0.1393, z: -0.446}
+  m_LocalPosition: {x: -0.027, y: 0.014899923, z: -0.446}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -816,7 +824,7 @@ Transform:
   m_GameObject: {fileID: 4366180860817709623}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2416, y: 0.1393, z: 0}
+  m_LocalPosition: {x: -0.2416, y: 0.014900007, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -847,7 +855,7 @@ Transform:
   m_GameObject: {fileID: 5594158803724748488}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.027, y: 0.1393, z: 0.38}
+  m_LocalPosition: {x: -0.027, y: 0.0149, z: 0.38}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1345,6 +1353,7 @@ GameObject:
   - component: {fileID: 8740452671369723390}
   - component: {fileID: 3859515122367065868}
   - component: {fileID: 4440522787102357848}
+  - component: {fileID: 4579221405028651748}
   m_Layer: 0
   m_Name: TailedBeast
   m_TagString: Enemy
@@ -1362,7 +1371,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -34.68, y: 40.932644, z: 40.85}
-  m_LocalScale: {x: 60, y: 60, z: 60}
+  m_LocalScale: {x: 30, y: 30, z: 30}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2157542859819461361}
@@ -1486,6 +1495,27 @@ MonoBehaviour:
   xpReward: 9999
   enemyRB: {fileID: 2455514582930504645}
   player: {fileID: 0}
+--- !u!114 &4579221405028651748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8019653981221895021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1ac5782094f37e45ae36e6bb28af07c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerupPrefabs:
+  - {fileID: 3769804284837776493, guid: 31be61fb089db99478d463cac56a7aff, type: 3}
+  dropChanceOnDeath: 1
+  snapToGround: 1
+  groundCheckHeight: 5
+  groundCheckDistance: 20
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &8370588707072670669
 GameObject:
   m_ObjectHideFlags: 0

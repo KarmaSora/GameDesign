@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     [Header("UI Panels")]
     [SerializeField] private GameObject startPanel;
     [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private GameObject winPanel;   // NEW - panel for YOU WON
 
     [Header("Player References")]
     [SerializeField] private PlayerMovement playerMovement;
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour
             StartGame();
         }
 
-        // If game is over, allow restart with R
+        // If game is over (dead or win), allow restart with R
         if (isGameOver && Input.GetKeyDown(KeyCode.R))
         {
             RestartGame();
@@ -69,6 +70,11 @@ public class GameManager : MonoBehaviour
             gameOverPanel.SetActive(false);
         }
 
+        if (winPanel != null)
+        {
+            winPanel.SetActive(false);
+        }
+
         // Disable player movement at start
         if (playerMovement != null)
         {
@@ -87,6 +93,16 @@ public class GameManager : MonoBehaviour
         if (startPanel != null)
         {
             startPanel.SetActive(false);
+        }
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
+
+        if (winPanel != null)
+        {
+            winPanel.SetActive(false);
         }
 
         // Enable player movement
@@ -108,6 +124,11 @@ public class GameManager : MonoBehaviour
             gameOverPanel.SetActive(true);
         }
 
+        if (winPanel != null)
+        {
+            winPanel.SetActive(false);
+        }
+
         // Stop player from moving
         if (playerMovement != null)
         {
@@ -115,6 +136,40 @@ public class GameManager : MonoBehaviour
         }
 
         // You could also disable enemy AI here if needed
+    }
+
+    // NEW - call this when the player wins
+    public void WinGame()
+    {
+        if (isGameOver) return;   // avoid double calls
+
+        isGameOver = true;
+
+        // Pause game
+        Time.timeScale = 0f;
+
+        // Show win panel
+        if (winPanel != null)
+        {
+            winPanel.SetActive(true);
+        }
+
+        // Hide other panels to be safe
+        if (startPanel != null)
+        {
+            startPanel.SetActive(false);
+        }
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
+
+        // Stop player from moving
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = false;
+        }
     }
 
     private void RestartGame()

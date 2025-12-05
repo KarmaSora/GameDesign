@@ -241,6 +241,7 @@ MonoBehaviour:
   idleColor: {r: 1, g: 1, b: 1, a: 1}
   windupColor: {r: 1, g: 0, b: 0, a: 1}
   playerTag: Player
+  deathbarrier: DeathBarrier
 --- !u!1 &1613970202196038628
 GameObject:
   m_ObjectHideFlags: 0
@@ -1060,6 +1061,7 @@ GameObject:
   - component: {fileID: 2263366409880794352}
   - component: {fileID: 2504044431377913797}
   - component: {fileID: 7283324737645981796}
+  - component: {fileID: 6414816352849178930}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -1195,6 +1197,28 @@ MonoBehaviour:
   xpReward: 25
   enemyRB: {fileID: 0}
   player: {fileID: 0}
+--- !u!114 &6414816352849178930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5541013425926801876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1ac5782094f37e45ae36e6bb28af07c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerupPrefabs:
+  - {fileID: 5514390184206021239, guid: 0efc29f494717774a8ccbb7d5076f372, type: 3}
+  dropChanceOnDeath: 0.074
+  verticalOffset: 0.5
+  snapToGround: 1
+  groundCheckHeight: 5
+  groundCheckDistance: 20
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &5716592795069024829
 GameObject:
   m_ObjectHideFlags: 0
