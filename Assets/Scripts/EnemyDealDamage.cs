@@ -165,6 +165,20 @@ public class EnemyDealDamage : MonoBehaviour
         Debug.Log("Enemy '" + gameObject.name + "' dealt " + damage + " damage to '" + playerHealth.gameObject.name + "'.");
 
         isAttacking = false;
+
+
+        PlayerKnockback kb = other.GetComponent<PlayerKnockback>();
+        if (kb == null)
+        {
+            kb = other.GetComponentInParent<PlayerKnockback>();
+        }
+            if (kb != null)
+        {
+            Vector3 dir = (other.transform.position - transform.position).normalized;
+            kb.ApplyKnockback(dir);
+        }
+
+
     }
 
     private void SetTelegraphColor(bool isWindup)
