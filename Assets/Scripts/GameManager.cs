@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,27 +9,104 @@ public class GameManager : MonoBehaviour
     [Header("UI Panels")]
     [SerializeField] private GameObject startPanel;
     [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private GameObject winPanel;   // NEW - panel for YOU WON
+    [SerializeField] private GameObject winPanel;
 
-    [Header("Player References")]
+    [Header("Player Movement Reference")]
     [SerializeField] private PlayerMovement playerMovement;
+
+    [Header("Player Stats References")]
+    [SerializeField] private PlayerStats playerStats;
+    [SerializeField] private DealDamage playerWeapon;
+    [SerializeField] private HealthSystem playerHealth;
+    [SerializeField] private PlayerLife playerLife;
+
+    [Header("End Screen Stats UI")]
+    [SerializeField] private TextMeshProUGUI winStatsText;
+    [SerializeField] private TextMeshProUGUI gameOverStatsText;
 
     private bool isGameStarted = false;
     private bool isGameOver = false;
 
+    // Stats
+    private int enemiesKilled = 0;
+    private float totalDamageDealt = 0f;
+    private float totalDamageTaken = 0f;
+
+    public int EnemiesKilled
+    {
+        get { return enemiesKilled; }
+    }
+
+    public float TotalDamageDealt
+    {
+        get { return totalDamageDealt; }
+    }
+
+    public float TotalDamageTaken
+    {
+        get { return totalDamageTaken; }
+    }
+
     private void Awake()
     {
-        // Simple singleton pattern so we can call GameManager.Instance from other scripts
         if (Instance == null)
         {
             Instance = this;
-            // Optionally keep this object across scenes:
-            // DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
             return;
+        }
+
+        // Try to auto-find player and its components if not assigned
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObject != null)
+        {
+            if (playerMovement == null)
+            {
+                playerMovement = playerObject.GetComponent<PlayerMovement>();
+            }
+
+            if (playerStats == null)
+            {
+                playerStats = playerObject.GetComponent<PlayerStats>();
+            }
+
+            if (playerHealth == null)
+            {
+                playerHealth = playerObject.GetComponent<HealthSystem>();
+            }
+
+            if (playerLife == null)
+            {
+                playerLife = playerObject.GetComponent<PlayerLife>();
+            }
+
+            if (playerWeapon == null && playerStats != null)
+            {
+                Transform[] children = playerStats.GetComponentsInChildren<Transform>(true);
+
+                for (int i = 0; i < children.Length; i++)
+                {
+                    Transform t = children[i];
+
+                    if (t.CompareTag("Weapon"))
+                    {
+                        playerWeapon = t.GetComponent<DealDamage>();
+
+                        if (playerWeapon != null)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("GameManager: No object with tag 'Player' found in scene.");
         }
     }
 
@@ -39,16 +117,20 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        // Start game when SPACE is pressed
-        if (!isGameStarted && !isGameOver && Input.GetKeyDown(KeyCode.Space))
+        if (!isGameStarted && !isGameOver)
         {
-            StartGame();
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StartGame();
+            }
         }
 
-        // If game is over (dead or win), allow restart with R
-        if (isGameOver && Input.GetKeyDown(KeyCode.R))
+        if (isGameOver)
         {
-            RestartGame();
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                RestartGame();
+            }
         }
     }
 
@@ -57,7 +139,6 @@ public class GameManager : MonoBehaviour
         isGameStarted = false;
         isGameOver = false;
 
-        // Pause game so nothing moves
         Time.timeScale = 0f;
 
         if (startPanel != null)
@@ -75,11 +156,15 @@ public class GameManager : MonoBehaviour
             winPanel.SetActive(false);
         }
 
-        // Disable player movement at start
         if (playerMovement != null)
         {
             playerMovement.enabled = false;
         }
+
+        // Reset stats here if you restart to main menu at some point
+        enemiesKilled = 0;
+        totalDamageDealt = 0f;
+        totalDamageTaken = 0f;
     }
 
     private void StartGame()
@@ -87,7 +172,6 @@ public class GameManager : MonoBehaviour
         isGameStarted = true;
         isGameOver = false;
 
-        // Resume time
         Time.timeScale = 1f;
 
         if (startPanel != null)
@@ -105,18 +189,21 @@ public class GameManager : MonoBehaviour
             winPanel.SetActive(false);
         }
 
-        // Enable player movement
         if (playerMovement != null)
         {
             playerMovement.enabled = true;
         }
+
+        // Reset stats at the beginning of a run
+        enemiesKilled = 0;
+        totalDamageDealt = 0f;
+        totalDamageTaken = 0f;
     }
 
     public void GameOver()
     {
         isGameOver = true;
 
-        // Pause game
         Time.timeScale = 0f;
 
         if (gameOverPanel != null)
@@ -129,32 +216,35 @@ public class GameManager : MonoBehaviour
             winPanel.SetActive(false);
         }
 
-        // Stop player from moving
+        if (startPanel != null)
+        {
+            startPanel.SetActive(false);
+        }
+
         if (playerMovement != null)
         {
             playerMovement.enabled = false;
         }
 
-        // You could also disable enemy AI here if needed
+        UpdateEndScreenStats(gameOverStatsText);
     }
 
-    // NEW - call this when the player wins
     public void WinGame()
     {
-        if (isGameOver) return;   // avoid double calls
+        if (isGameOver)
+        {
+            return;
+        }
 
         isGameOver = true;
 
-        // Pause game
         Time.timeScale = 0f;
 
-        // Show win panel
         if (winPanel != null)
         {
             winPanel.SetActive(true);
         }
 
-        // Hide other panels to be safe
         if (startPanel != null)
         {
             startPanel.SetActive(false);
@@ -165,19 +255,104 @@ public class GameManager : MonoBehaviour
             gameOverPanel.SetActive(false);
         }
 
-        // Stop player from moving
         if (playerMovement != null)
         {
             playerMovement.enabled = false;
         }
+
+        UpdateEndScreenStats(winStatsText);
     }
 
     private void RestartGame()
     {
-        // Make sure timeScale is normal again
         Time.timeScale = 1f;
 
         Scene currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.buildIndex);
+    }
+
+    // Called from HealthSystem when an enemy is killed by the player
+    public void RegisterEnemyKill()
+    {
+        enemiesKilled = enemiesKilled + 1;
+        Debug.Log("GameManager: Enemies killed = " + enemiesKilled);
+    }
+
+    // Called from HealthSystem when player deals damage to an enemy
+    public void RegisterDamageDealt(float amount)
+    {
+        if (amount <= 0f)
+        {
+            return;
+        }
+
+        totalDamageDealt = totalDamageDealt + amount;
+    }
+
+    // Called from HealthSystem when the player takes damage
+    public void RegisterDamageTaken(float amount)
+    {
+        if (amount <= 0f)
+        {
+            return;
+        }
+
+        totalDamageTaken = totalDamageTaken + amount;
+    }
+
+    private void UpdateEndScreenStats(TextMeshProUGUI targetText)
+    {
+        if (targetText == null)
+        {
+            Debug.LogError("GameManager.UpdateEndScreenStats: targetText is NULL. Did you assign the Win/GameOver Stats Text in the Inspector?");
+
+            return;
+        }
+
+        int level = 0;
+        int currentXP = 0;
+        int xpToNextLevel = 0;
+
+        if (playerStats != null)
+        {
+            level = playerStats.Level;
+            currentXP = playerStats.CurrentXP;
+            xpToNextLevel = playerStats.XPToNextLevel;
+        }
+
+        float damageStat = 0f;
+
+        if (playerWeapon != null)
+        {
+            damageStat = playerWeapon.damage;
+        }
+
+        float currentHealth = 0f;
+        float maxHealth = 0f;
+
+        if (playerHealth != null)
+        {
+            currentHealth = playerHealth.currentHealth;
+            maxHealth = playerHealth.MaxHealth;
+        }
+
+        int lives = 0;
+
+        if (playerLife != null)
+        {
+            lives = playerLife.CurrentLives;
+        }
+
+        string statsText = "";
+        statsText += "Level: " + level + "\n";
+        statsText += "XP: " + currentXP + " / " + xpToNextLevel + "\n";
+        statsText += "Damage (weapon): " + damageStat.ToString("0") + "\n";
+        statsText += "Health: " + currentHealth.ToString("0") + " / " + maxHealth.ToString("0") + "\n";
+        statsText += "Lives left: " + lives + "\n";
+        statsText += "Enemies defeated: " + enemiesKilled + "\n";
+        statsText += "Total damage dealt: " + totalDamageDealt.ToString("0") + "\n";
+        statsText += "Total damage taken: " + totalDamageTaken.ToString("0") + "\n";
+
+        targetText.text = statsText;
     }
 }

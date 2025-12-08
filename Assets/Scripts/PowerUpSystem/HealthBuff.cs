@@ -25,6 +25,9 @@ public class HealthBuff : PowerupEffect
 
         float beforeHealth = healthSystem.currentHealth;
 
+
+
+        /**
         // Apply heal
         healthSystem.currentHealth += amount;
 
@@ -38,6 +41,8 @@ public class HealthBuff : PowerupEffect
         {
             healthSystem.currentHealth = 0f;
         }
+        */
+        healthSystem.Heal(amount);
 
         Debug.Log(
             "[HealthBuff] Activated on " + target.name +

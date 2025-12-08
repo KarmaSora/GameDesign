@@ -1,4 +1,4 @@
-using System; // NEW: for Action<>
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,34 +9,40 @@ public class HealthSystem : MonoBehaviour
     [SerializeField] public float currentHealth;
     [SerializeField] private float maxHealth = 100f;
 
-    // NEW: UI / other systems can subscribe to this
-    // (currentHealth, maxHealth)
     public event Action<float, float> OnHealthChanged;
+
+    private bool lastHitByPlayer = false;
 
     private void Awake()
     {
         currentHealth = maxHealth;
 
-        // NEW: tell listeners the initial values
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        if (OnHealthChanged != null)
+        {
+            OnHealthChanged.Invoke(currentHealth, maxHealth);
+        }
     }
 
-    // Classic getter for maxHealth
     public float MaxHealth
     {
         get { return maxHealth; }
     }
 
-    // Optional read-only helper (does not replace currentHealth!)
     public float CurrentHealth
     {
         get { return currentHealth; }
     }
 
-    // Allows external scripts (PlayerStats, Powerups, etc.) to change max HP
     public void SetMaxHealth(float newMaxHealth, bool healToFull)
     {
-        maxHealth = Mathf.Max(1f, newMaxHealth);
+        if (newMaxHealth < 1f)
+        {
+            maxHealth = 1f;
+        }
+        else
+        {
+            maxHealth = newMaxHealth;
+        }
 
         if (healToFull)
         {
@@ -44,35 +50,101 @@ public class HealthSystem : MonoBehaviour
         }
         else
         {
-            currentHealth = Mathf.Min(currentHealth, maxHealth);
+            if (currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
         }
 
         Debug.Log(gameObject.name + " new max health: " + maxHealth + ", current: " + currentHealth);
 
-        // NEW: notify listeners
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        if (OnHealthChanged != null)
+        {
+            OnHealthChanged.Invoke(currentHealth, maxHealth);
+        }
     }
 
     public void Heal(float amount)
     {
-        if (amount <= 0f) return;
+        if (amount <= 0f)
+        {
+            return;
+        }
 
-        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        float newHealth = currentHealth + amount;
+
+        if (newHealth > maxHealth)
+        {
+            newHealth = maxHealth;
+        }
+
+        currentHealth = newHealth;
+
         Debug.Log(gameObject.name + " healed. Health: " + currentHealth + "/" + maxHealth);
 
-        // NEW: notify listeners
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        if (OnHealthChanged != null)
+        {
+            OnHealthChanged.Invoke(currentHealth, maxHealth);
+        }
     }
 
     public void TakeDamage(float damage)
     {
-        if (damage <= 0.0f) return;
+        TakeDamage(damage, false);
+    }
 
-        currentHealth -= damage;
-        Debug.Log(gameObject.name + " Health: " + currentHealth);
+    public void TakeDamage(float damage, bool causedByPlayer)
+    {
+        if (damage <= 0.0f)
+        {
+            return;
+        }
 
-        // NEW: notify listeners
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        float oldHealth = currentHealth;
+
+        currentHealth = currentHealth - damage;
+
+        if (currentHealth < 0f)
+        {
+            currentHealth = 0f;
+        }
+
+        lastHitByPlayer = causedByPlayer;
+
+        float actualDamage = oldHealth - currentHealth;
+
+        Debug.Log(gameObject.name + " took damage. Current health: " + currentHealth +
+                  " | causedByPlayer = " + causedByPlayer +
+                  " | actualDamage = " + actualDamage);
+
+        // If an enemy was damaged by the player: count as damage dealt
+        if (CompareTag("Enemy"))
+        {
+            if (causedByPlayer)
+            {
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.RegisterDamageDealt(actualDamage);
+                }
+            }
+        }
+
+        // If the player took damage: count as damage taken
+        if (CompareTag("Player"))
+        {
+            if (actualDamage > 0f)
+            {
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.RegisterDamageTaken(actualDamage);
+                }
+            }
+        }
+
+        if (OnHealthChanged != null)
+        {
+            OnHealthChanged.Invoke(currentHealth, maxHealth);
+        }
 
         if (currentHealth <= 0.0f)
         {
@@ -82,72 +154,87 @@ public class HealthSystem : MonoBehaviour
 
     private void Die()
     {
-        // NEW: try dropping a powerup on death (for any object that has the component)
         PowerupDropOnDeath drop = GetComponent<PowerupDropOnDeath>();
         if (drop != null)
         {
             drop.DropNow();
         }
 
-        // CASE 1: Enemy -> award XP and destroy
+        // ENEMY DEATH
         if (CompareTag("Enemy"))
         {
-            int xpReward = 10; // default fallback
-
-            Enemy enemyComponent = GetComponent<Enemy>();
-            if (enemyComponent != null)
+            if (lastHitByPlayer)
             {
-                xpReward = enemyComponent.XPReward;
-            }
+                int xpReward = 10;
 
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-            {
-                PlayerStats stats = player.GetComponent<PlayerStats>();
-                if (stats != null)
+                Enemy enemyComponent = GetComponent<Enemy>();
+                if (enemyComponent != null)
                 {
-                    stats.AddXP(xpReward);
+                    xpReward = enemyComponent.XPReward;
+                }
+
+                GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+                if (playerObject != null)
+                {
+                    PlayerStats stats = playerObject.GetComponent<PlayerStats>();
+                    if (stats != null)
+                    {
+                        stats.AddXP(xpReward);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("HealthSystem.Die: PlayerStats missing on Player.");
+                    }
                 }
                 else
                 {
-                    Debug.LogWarning("HealthSystem.Die: Player has no PlayerStats component.");
+                    Debug.LogWarning("HealthSystem.Die: No Player object found.");
+                }
+
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.RegisterEnemyKill();
                 }
             }
             else
             {
-                Debug.LogWarning("HealthSystem.Die: No 'Player' object found to award XP.");
+                Debug.Log("Enemy died without player hit. No XP or kill awarded.");
             }
 
             Destroy(gameObject);
             return;
         }
 
-        // CASE 2: Player -> use lives system instead of destroy
+        // PLAYER DEATH
         if (CompareTag("Player"))
         {
-            PlayerLife playerLife = GetComponent<PlayerLife>();
-            if (playerLife != null)
+            PlayerLife life = GetComponent<PlayerLife>();
+
+            if (life != null)
             {
-                playerLife.HandleDeath();
+                life.HandleDeath();
             }
             else
             {
-                Debug.LogWarning("HealthSystem.Die: Player has no PlayerLife component.");
-                // Fallback: if no PlayerLife, just destroy
+                Debug.LogWarning("PlayerLife component missing. Destroying player.");
                 Destroy(gameObject);
             }
 
             return;
         }
 
-        // CASE 3: Anything else -> just destroy
+        // ANY OTHER OBJECT
         Destroy(gameObject);
     }
 
-    // NEW: helper, nice for sliders
     public float GetHealthNormalized()
     {
-        if (maxHealth <= 0f) return 0f;
-        return currentHealth / maxHealth;
+        if (maxHealth <= 0f)
+        {
+            return 0f;
+        }
+
+        float result = currentHealth / maxHealth;
+        return result;
     }
 }

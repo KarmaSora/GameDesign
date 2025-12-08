@@ -25,6 +25,9 @@ public class PlayerUI : MonoBehaviour
     [Header("Lives UI")]
     [SerializeField] private TextMeshProUGUI livesText;
 
+    [Header("Kills UI")]
+    [SerializeField] private TextMeshProUGUI killsText;
+
     private void Awake()
     {
         // Auto-find references if not assigned
@@ -90,6 +93,7 @@ public class PlayerUI : MonoBehaviour
         RefreshDamageUI();
         RefreshHealthUI();
         RefreshLivesUI();
+        RefreshKillsUI();
     }
 
     private void RefreshAll()
@@ -98,6 +102,7 @@ public class PlayerUI : MonoBehaviour
         RefreshDamageUI();
         RefreshHealthUI();
         RefreshLivesUI();
+        RefreshKillsUI();
     }
 
     private void RefreshXPUI()
@@ -180,5 +185,20 @@ public class PlayerUI : MonoBehaviour
 
         int lives = playerLife.CurrentLives;
         livesText.text = "Lives: " + lives;
+    }
+
+    private void RefreshKillsUI()
+    {
+        if (killsText == null)
+            return;
+
+        if (GameManager.Instance != null)
+        {
+            killsText.text = "Kills: " + GameManager.Instance.EnemiesKilled;
+        }
+        else
+        {
+            killsText.text = "Kills: 0";
+        }
     }
 }

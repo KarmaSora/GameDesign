@@ -21,6 +21,14 @@ public class DamageBuff : PowerupEffect
 
         if (dealDamage == null)
         {
+            dealDamage = target.GetComponentInChildren<DealDamage>();
+
+            Debug.LogWarning("[DamageBuff] No DealDamage component found on target: " + target.name);
+            return;
+        }
+        if (dealDamage == null)
+        {
+
             Debug.LogWarning("[DamageBuff] No DealDamage component found on target: " + target.name);
             return;
         }
