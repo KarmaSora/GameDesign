@@ -221,7 +221,7 @@ MonoBehaviour:
   detectionRadius: 8
   limitToHomeRadius: 1
   homeRadius: 10
-  xpReward: 100
+  xpReward: 350
   enemyRB: {fileID: 0}
   player: {fileID: 0}
 --- !u!114 &2944147413050695945
@@ -256,7 +256,6 @@ MonoBehaviour:
   - {fileID: 6702517199473214620, guid: 2c2528c65df99344f8e3ffcbf41d90d7, type: 3}
   - {fileID: 5514390184206021239, guid: 0efc29f494717774a8ccbb7d5076f372, type: 3}
   dropChanceOnDeath: 0.407
-  verticalOffset: 0.5
   snapToGround: 1
   groundCheckHeight: 5
   groundCheckDistance: 20

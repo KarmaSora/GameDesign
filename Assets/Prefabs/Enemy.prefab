@@ -1195,7 +1195,7 @@ MonoBehaviour:
   limitToHomeRadius: 1
   homeRadius: 12
   xpReward: 25
-  enemyRB: {fileID: 0}
+  enemyRB: {fileID: 2263366409880794352}
   player: {fileID: 0}
 --- !u!114 &6414816352849178930
 MonoBehaviour:
@@ -1211,8 +1211,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   powerupPrefabs:
   - {fileID: 5514390184206021239, guid: 0efc29f494717774a8ccbb7d5076f372, type: 3}
-  dropChanceOnDeath: 0.074
-  verticalOffset: 0.5
+  - {fileID: 6702517199473214620, guid: 2c2528c65df99344f8e3ffcbf41d90d7, type: 3}
+  dropChanceOnDeath: 0.056
   snapToGround: 1
   groundCheckHeight: 5
   groundCheckDistance: 20
