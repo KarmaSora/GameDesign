@@ -26,11 +26,14 @@ public class GameManager : MonoBehaviour
 
     private bool isGameStarted = false;
     private bool isGameOver = false;
+    private bool isGamePaused = false;
 
     // Stats
     private int enemiesKilled = 0;
     private float totalDamageDealt = 0f;
     private float totalDamageTaken = 0f;
+
+
 
     public int EnemiesKilled
     {
@@ -46,7 +49,10 @@ public class GameManager : MonoBehaviour
     {
         get { return totalDamageTaken; }
     }
-
+    public bool IsGamePaused
+    {
+        get { return isGamePaused; }
+    }
     private void Awake()
     {
         if (Instance == null)
@@ -117,27 +123,54 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (!isGameStarted && !isGameOver)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                StartGame();
-            }
-        }
-
+        // 1) If game is over, only allow restart
         if (isGameOver)
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
                 RestartGame();
             }
+
+            return;
+        }
+
+        // 2) Before game has started: Space starts the game
+        if (!isGameStarted)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StartGame();
+            }
+
+            return;
+        }
+
+        // 3) Game has started and is not over
+
+        // If currently paused: Space resumes
+        if (isGamePaused)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ResumeGame();
+            }
+
+            return;
+        }
+
+        // If running: Escape pauses
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseGame();
         }
     }
+
 
     private void ShowStartMenu()
     {
         isGameStarted = false;
         isGameOver = false;
+        isGamePaused = false;
 
         Time.timeScale = 0f;
 
@@ -171,6 +204,7 @@ public class GameManager : MonoBehaviour
     {
         isGameStarted = true;
         isGameOver = false;
+        isGamePaused = false;
 
         Time.timeScale = 1f;
 
@@ -203,6 +237,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         isGameOver = true;
+        isGamePaused = false;
 
         Time.timeScale = 0f;
 
@@ -237,6 +272,7 @@ public class GameManager : MonoBehaviour
         }
 
         isGameOver = true;
+        isGamePaused = false;
 
         Time.timeScale = 0f;
 
@@ -355,4 +391,53 @@ public class GameManager : MonoBehaviour
 
         targetText.text = statsText;
     }
+
+    private void PauseGame()
+    {
+        // Do not pause if game has not started or is already over
+        if (!isGameStarted || isGameOver)
+        {
+            return;
+        }
+
+        if (isGamePaused)
+        {
+            return;
+        }
+
+        isGamePaused = true;
+        Time.timeScale = 0f;
+
+        if (startPanel != null)
+        {
+            startPanel.SetActive(true);
+        }
+
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = false;
+        }
+    }
+
+    private void ResumeGame()
+    {
+        if (!isGamePaused || isGameOver)
+        {
+            return;
+        }
+
+        isGamePaused = false;
+        Time.timeScale = 1f;
+
+        if (startPanel != null)
+        {
+            startPanel.SetActive(false);
+        }
+
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = true;
+        }
+    }
+
 }

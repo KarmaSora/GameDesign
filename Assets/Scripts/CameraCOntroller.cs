@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CameraCOntroller : MonoBehaviour
 {
@@ -21,6 +22,10 @@ public class CameraCOntroller : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform yawTransform;  // Object rotated left/right (usually player body or camera pivot)
 
+
+    [SerializeField] private TextMeshProUGUI sensitivityText;
+
+
     private float pitch; // current x-rotation in degrees
 
 
@@ -35,15 +40,74 @@ public class CameraCOntroller : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
 
+        if (sensitivityText == null)
+        {
+            GameObject textObj = GameObject.Find("CameraSensitivityText");
+            if (textObj != null)
+            {
+                sensitivityText = textObj.GetComponent<TextMeshProUGUI>();
+            }
+        }
+        UpdateSensitivityText();
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Rotate();
-        //Rotate2();
+
+        if (GameManager.Instance != null && GameManager.Instance.IsGamePaused)
+        {
+            HandleSensitivityAdjustInput();
+            return;
+        }
+
+
         Rotate3();
+
+      
     }
+
+    private void HandleSensitivityAdjustInput()
+    {
+        bool changed = false;
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            increaseCameraSpeed();
+            changed = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            decreaseCameraSpeed();
+            changed = true;
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            setCameraSpeed(150);
+        }
+
+
+
+
+        mouseSensitivity = Mathf.Clamp(mouseSensitivity, 20f, 500f);
+
+        if (changed)
+        {
+            Debug.Log("Camera sensitivity: " + mouseSensitivity);
+            UpdateSensitivityText();
+        }
+    }
+    private void UpdateSensitivityText()
+    {
+        if (sensitivityText != null)
+        {
+            sensitivityText.text = "Camera Sensitivity: " + mouseSensitivity.ToString("0");
+        }
+    }
+
 
 
     private void Rotate()
@@ -87,7 +151,29 @@ public class CameraCOntroller : MonoBehaviour
 
     }
 
+     void increaseCameraSpeed(float amount=5)
+    {
+        mouseSensitivity += amount;
+
+    }
+
+    private void decreaseCameraSpeed(float amount = 5)
+    {
+        mouseSensitivity -= amount;
+
+    }
 
 
+    public void setCameraSpeed(float amount)
+    {
+        mouseSensitivity = amount;
+
+    }
+
+    public float  getCameraSpeed()
+    {
+        return mouseSensitivity;
+
+    }
 
 }
