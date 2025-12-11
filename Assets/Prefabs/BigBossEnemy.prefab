@@ -304,8 +304,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 3.2109022, y: 0.5495859, z: 5.6321783}
-  m_Center: {x: -0.0000023841858, y: 0.27479294, z: 0.76036406}
+  m_Size: {x: 3.2109022, y: 5.829779, z: 2.6848402}
+  m_Center: {x: -0.0000023841858, y: 2.9148896, z: 1.2013223}
 --- !u!1 &6980679030721307758
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,6 +352,7 @@ GameObject:
   - component: {fileID: 2066022816645904559}
   - component: {fileID: 6487301263765973014}
   - component: {fileID: 1348954955715781402}
+  - component: {fileID: 379593006542073685}
   m_Layer: 0
   m_Name: BigBossEnemy
   m_TagString: Enemy
@@ -480,6 +481,28 @@ MonoBehaviour:
   xpReward: 250
   enemyRB: {fileID: 1774099504358840169}
   player: {fileID: 0}
+--- !u!114 &379593006542073685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7056605915726842367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1ac5782094f37e45ae36e6bb28af07c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerupPrefabs:
+  - {fileID: 7685262636751544437, guid: 9c1df0006a9eb534aa91a5aad0143151, type: 3}
+  - {fileID: 1942029407797787760, guid: 5096505eed0f1604e83edca99d161a80, type: 3}
+  dropChanceOnDeath: 0.036
+  snapToGround: 1
+  groundCheckHeight: 5
+  groundCheckDistance: 20
+  groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &7215822587223273575
 GameObject:
   m_ObjectHideFlags: 0
@@ -558,8 +581,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 20
-  attackCooldown: 5
-  windupTime: 0.4
+  attackCooldown: 1.6
+  windupTime: 0.5
   hitRange: 3
   enemyRenderer: {fileID: 7240764853453573740}
   idleColor: {r: 1, g: 1, b: 1, a: 1}

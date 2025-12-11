@@ -1508,7 +1508,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerupPrefabs:
-  - {fileID: 3769804284837776493, guid: 31be61fb089db99478d463cac56a7aff, type: 3}
+  - {fileID: 8079854925222318189, guid: 5ffec89ac0e14a74fb3c4f76d7542071, type: 3}
   dropChanceOnDeath: 1
   snapToGround: 1
   groundCheckHeight: 5

@@ -15,8 +15,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float playerMoveSpeed;
 
     public float moveSpeedIncreaser =1;
-    [SerializeField] private float walkSpeed = 2 ;
-    [SerializeField] private float runSpeed = 5 ;
+    [SerializeField] private float walkSpeed = 3 ;
+    [SerializeField] private float runSpeed = 7 ;
 
     [SerializeField] private bool isGrounded;
     //[SerializeField] private float groundCheckDistance;
@@ -28,7 +28,6 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float jumpHight = 3;
 
-    [SerializeField] private bool defending = false;
 
 
 
@@ -88,9 +87,11 @@ public class PlayerMovement : MonoBehaviour
         //isGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundMask);
 
         float veritcalInput = Input.GetAxis("Vertical"); //Move Z
+        float horizontal = Input.GetAxis("Horizontal"); //Move X
 
-        moveDirection = new Vector3 (0f, 0f, veritcalInput);
+        moveDirection = new Vector3 (horizontal, 0f, veritcalInput);
         moveDirection = transform.TransformDirection(moveDirection);
+ 
 
         //check if grounded and stop applying gravity
 

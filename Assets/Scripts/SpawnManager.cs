@@ -99,8 +99,11 @@ public class SpawnManager : MonoBehaviour
 
     private void SpawnRandomPowerup()
     {
-        if (powerUpPrefabs == null || powerUpPrefabs.Length == 0)
+
+        if (powerUpPrefabs.Length == 0) return;
+        if (powerUpPrefabs == null )
         {
+
             Debug.LogWarning($"SpawnManager ({name}): No powerUpPrefabs assigned!");
             return;
         }

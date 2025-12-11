@@ -95,10 +95,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3396021361926032707}
   - component: {fileID: 8406953432675706164}
-  - component: {fileID: 4818583905234650821}
   - component: {fileID: 618675461780436334}
-  - component: {fileID: 4660554908195971073}
+  - component: {fileID: 4818583905234650821}
   - component: {fileID: 2944147413050695945}
+  - component: {fileID: 4660554908195971073}
   - component: {fileID: 2101915195400442487}
   m_Layer: 0
   m_Name: Animal_Moose_01
@@ -156,27 +156,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &4818583905234650821
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945419953542788215}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.45423993, y: 0.53120095, z: 0.5712309}
-  m_Center: {x: 0.015975779, y: 0.23440075, z: 0.079874694}
 --- !u!54 &618675461780436334
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -204,6 +183,41 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &4818583905234650821
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945419953542788215}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.45423993, y: 0.53120095, z: 0.5712309}
+  m_Center: {x: 0.015975779, y: 0.23440075, z: 0.079874694}
+--- !u!114 &2944147413050695945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945419953542788215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a63abfa6ae8b5a8428f3ad112460dfc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 0
+  maxHealth: 75
 --- !u!114 &4660554908195971073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,20 +238,6 @@ MonoBehaviour:
   xpReward: 350
   enemyRB: {fileID: 0}
   player: {fileID: 0}
---- !u!114 &2944147413050695945
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945419953542788215}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a63abfa6ae8b5a8428f3ad112460dfc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentHealth: 0
-  maxHealth: 75
 --- !u!114 &2101915195400442487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,11 +251,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerupPrefabs:
-  - {fileID: 6702517199473214620, guid: 2c2528c65df99344f8e3ffcbf41d90d7, type: 3}
-  - {fileID: 6702517199473214620, guid: 2c2528c65df99344f8e3ffcbf41d90d7, type: 3}
-  - {fileID: 6702517199473214620, guid: 2c2528c65df99344f8e3ffcbf41d90d7, type: 3}
-  - {fileID: 5514390184206021239, guid: 0efc29f494717774a8ccbb7d5076f372, type: 3}
-  dropChanceOnDeath: 0.407
+  - {fileID: 1942029407797787760, guid: 5096505eed0f1604e83edca99d161a80, type: 3}
+  - {fileID: 1942029407797787760, guid: 5096505eed0f1604e83edca99d161a80, type: 3}
+  - {fileID: 1942029407797787760, guid: 5096505eed0f1604e83edca99d161a80, type: 3}
+  - {fileID: 7685262636751544437, guid: 9c1df0006a9eb534aa91a5aad0143151, type: 3}
+  dropChanceOnDeath: 0.399
   snapToGround: 1
   groundCheckHeight: 5
   groundCheckDistance: 20

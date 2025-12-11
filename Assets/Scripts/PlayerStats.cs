@@ -11,11 +11,11 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float xpGrowthFactor = 1.5f;
 
     [Header("Damage Scaling")]
-    [SerializeField] private float damageBonusPerLevel = 2f;
+    [SerializeField] private float damageBonusPerLevel = 5f;
 
     [Header("Health Scaling")]
     [SerializeField] private float baseMaxHealth = 100f;
-    [SerializeField] private float healthPerLevel = 10f;
+    [SerializeField] private float healthPerLevel = 12f;
 
     private HealthSystem healthSystem;
     private DealDamage weaponDamage;
