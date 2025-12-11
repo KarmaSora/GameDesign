@@ -20,6 +20,10 @@ public class PlayerStats : MonoBehaviour
     private HealthSystem healthSystem;
     private DealDamage weaponDamage;
 
+
+    private float baseWeaponDamageAtLevel1;
+
+
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
@@ -33,6 +37,11 @@ public class PlayerStats : MonoBehaviour
                 break;
             }
         }
+        if (weaponDamage != null)
+        {
+            baseWeaponDamageAtLevel1 = weaponDamage.BaseDamage;
+        }
+
     }
 
     private void Start()
@@ -71,9 +80,12 @@ public class PlayerStats : MonoBehaviour
 
         if (weaponDamage != null)
         {
-            float baseDamage = weaponDamage.BaseDamage;
-            float bonus = (level - 1) * damageBonusPerLevel;
-            weaponDamage.damage = baseDamage + bonus;
+     
+            float scaledBaseDamage = baseWeaponDamageAtLevel1 + (level - 1) * damageBonusPerLevel;
+
+
+            weaponDamage.SetBaseDamage(scaledBaseDamage);
+
         }
     }
 

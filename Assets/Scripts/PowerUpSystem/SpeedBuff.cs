@@ -1,8 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName ="Powerups/SpeedBuff")]
+[CreateAssetMenu(menuName = "Powerups/SpeedBuff")]
 public class SpeedBuff : PowerupEffect
 {
     [Header("Speed Buff Settings")]
@@ -11,7 +10,12 @@ public class SpeedBuff : PowerupEffect
 
     public override void Apply(GameObject target)
     {
-        // Get the movement component on the player
+        if (target == null)
+        {
+            Debug.LogWarning("SpeedBuff: Target is null.");
+            return;
+        }
+
         PlayerMovement movement = target.GetComponent<PlayerMovement>();
 
         if (movement == null)
@@ -20,20 +24,25 @@ public class SpeedBuff : PowerupEffect
             return;
         }
 
+        // Show indicator on player
+        PowerupIndicatorController indicator = target.GetComponent<PowerupIndicatorController>();
+
+        if (indicator != null)
+        {
+            indicator.ShowIndicator(PowerupVisualType.Speed, duration);
+        }
+
         // Start a coroutine on the player to handle the timed buff
         movement.StartCoroutine(ApplySpeedBuffCoroutine(movement));
     }
 
     private IEnumerator ApplySpeedBuffCoroutine(PlayerMovement movement)
     {
-        // 1. Apply the buff
         movement.moveSpeedIncreaser += amount;
         Debug.Log("SpeedBuff activated: +" + amount + " for " + duration + " seconds.");
 
-        // 2. Wait for 'duration' seconds (this is the "temporary" part)
         yield return new WaitForSeconds(duration);
 
-        // 3. Remove the buff again
         movement.moveSpeedIncreaser -= amount;
         Debug.Log("SpeedBuff expired: -" + amount);
     }

@@ -1,12 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Powerups/Damagebuff")]
 public class DamageBuff : PowerupEffect
 {
-    // How much extra damage this buff should add
-    public float amount;
+    [Header("Damage Buff Settings")]
+    public float amount = 10f;      // Extra damage on top of base
+    public float duration = 5f;     // How long the buff lasts
+
+    [Header("Indicator Settings")]
+    public float indicatorDurationOverride = -1f;
 
     public override void Apply(GameObject target)
     {
@@ -16,38 +19,58 @@ public class DamageBuff : PowerupEffect
             return;
         }
 
-        // Try to get the component that actually holds the damage value
-        DealDamage dealDamage = target.GetComponent<DealDamage>();
+        DealDamage dealDamage = target.GetComponentInChildren<DealDamage>();
 
         if (dealDamage == null)
         {
-            dealDamage = target.GetComponentInChildren<DealDamage>();
-
-            //Debug.LogWarning("[DamageBuff] No DealDamage component found on target: " + target.name);
-            return;
-        }
-        if (dealDamage == null)
-        {
-
             Debug.LogWarning("[DamageBuff] No DealDamage component found on target or children: " + target.name);
             return;
         }
 
-        // Store the old value so we can see what changed
-        float oldDamage = dealDamage.damage;
+        PowerupIndicatorController indicator = target.GetComponent<PowerupIndicatorController>();
 
-        // Apply a flat increase
-        dealDamage.damage += amount;
-
-        // Safety: never let damage go below zero (in case amount is negative)
-        if (dealDamage.damage < 0f)
+        if (indicator != null)
         {
-            dealDamage.damage = 0f;
+            float indicatorDuration = duration;
+
+            if (indicatorDurationOverride > 0f)
+            {
+                indicatorDuration = indicatorDurationOverride;
+            }
+
+            indicator.ShowIndicator(PowerupVisualType.Damage, indicatorDuration);
         }
 
-        Debug.Log("[DamageBuff] Applied to " + target.name +
-                  " | oldDamage = " + oldDamage +
-                  " | amount = " + amount +
-                  " | newDamage = " + dealDamage.damage);
+        PlayerMovement runner = target.GetComponent<PlayerMovement>();
+
+        if (runner == null)
+        {
+            Debug.LogWarning("[DamageBuff] No PlayerMovement found on target to run coroutine: " + target.name);
+            return;
+        }
+
+        runner.StartCoroutine(ApplyDamageBuffCoroutine(dealDamage));
+    }
+
+    private IEnumerator ApplyDamageBuffCoroutine(DealDamage dealDamage)
+    {
+        // Add temporary bonus
+        dealDamage.AddDamageBuffBonus(amount);
+
+        Debug.Log(
+            "[DamageBuff] Activated. Added buff amount: " + amount +
+            " | total damage now = " + dealDamage.CurrentDamage +
+            " | duration = " + duration
+        );
+
+        yield return new WaitForSeconds(duration);
+
+        // Remove the same bonus
+        dealDamage.AddDamageBuffBonus(-amount);
+
+        Debug.Log(
+            "[DamageBuff] Expired. Removed buff amount: " + amount +
+            " | total damage now = " + dealDamage.CurrentDamage
+        );
     }
 }

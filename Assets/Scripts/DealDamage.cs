@@ -10,6 +10,7 @@ public class DealDamage : MonoBehaviour
     [SerializeField] private float baseDamage = 10f;
 
     [SerializeField] private GameObject owner;
+    [SerializeField] private float damageBuffBonus = 0f;
 
     private void Awake()
     {
@@ -17,11 +18,17 @@ public class DealDamage : MonoBehaviour
         {
             baseDamage = damage;
         }
+        UpdateEffectiveDamage();
+
     }
 
     public float BaseDamage
     {
         get { return baseDamage; }
+    }
+    public float CurrentDamage
+    {
+        get { return damage; }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -49,4 +56,29 @@ public class DealDamage : MonoBehaviour
         // Damage from player's weapon
         health.TakeDamage(damage, true);
     }
+    public void SetBaseDamage(float newBaseDamage)
+    {
+        baseDamage = newBaseDamage;
+        UpdateEffectiveDamage();
+    }
+    public void AddDamageBuffBonus(float amount)
+    {
+        damageBuffBonus = damageBuffBonus + amount;
+        UpdateEffectiveDamage();
+    }
+    public void ClearDamageBuffBonus()
+    {
+        damageBuffBonus = 0f;
+        UpdateEffectiveDamage();
+    }
+    private void UpdateEffectiveDamage()
+    {
+        damage = baseDamage + damageBuffBonus;
+
+        if (damage < 0f)
+        {
+            damage = 0f;
+        }
+    }
+
 }

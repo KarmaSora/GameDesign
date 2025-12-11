@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float playerMoveSpeed;
 
-    public float moveSpeedIncreaser =1;
+    public float moveSpeedIncreaser =0;
     [SerializeField] private float walkSpeed = 3 ;
     [SerializeField] private float runSpeed = 7 ;
 
@@ -174,12 +174,12 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Speed", 0, 0.1f, Time.deltaTime);
     }
     private void Walk() { 
-        playerMoveSpeed = walkSpeed * moveSpeedIncreaser;
+        playerMoveSpeed = walkSpeed + moveSpeedIncreaser;
         animator.SetFloat("Speed", 0.5f, 0.1f, Time.deltaTime);
     }
     private void Run() {
         animator.SetFloat("Speed", 1, 0.1f, Time.deltaTime);
-        playerMoveSpeed = runSpeed * moveSpeedIncreaser;
+        playerMoveSpeed = runSpeed + moveSpeedIncreaser;
     }
     private void jump()
     {

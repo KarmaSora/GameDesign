@@ -10,6 +10,12 @@ public class JumpBuff : PowerupEffect
 
     public override void Apply(GameObject target)
     {
+        if (target == null)
+        {
+            Debug.LogWarning("JumpBuff: Target is null.");
+            return;
+        }
+
         PlayerMovement pm = target.GetComponent<PlayerMovement>();
 
         if (pm == null)
@@ -18,19 +24,24 @@ public class JumpBuff : PowerupEffect
             return;
         }
 
+        // Show indicator
+        PowerupIndicatorController indicator = target.GetComponent<PowerupIndicatorController>();
+
+        if (indicator != null)
+        {
+            indicator.ShowIndicator(PowerupVisualType.Jump, duration);
+        }
+
         pm.StartCoroutine(ApplyJumpBuff(pm));
     }
 
     private IEnumerator ApplyJumpBuff(PlayerMovement pm)
     {
-        // 1. Apply
         pm.jumpIncreaser += amount;
         Debug.Log("JumpBuff activated: +" + amount + " jump for " + duration + " seconds.");
 
-        // 2. Wait
         yield return new WaitForSeconds(duration);
 
-        // 3. Revert
         pm.jumpIncreaser -= amount;
         Debug.Log("JumpBuff expired: -" + amount);
     }

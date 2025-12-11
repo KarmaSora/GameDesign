@@ -290,8 +290,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.67489624, y: 0.95568633, z: 0.20007594}
-  m_Center: {x: 0, y: -0.00000011920929, z: 0.000000007450581}
+  m_Size: {x: 0.67489624, y: 1.6505017, z: 0.20007594}
+  m_Center: {x: 0, y: -0.34740782, z: 0.000000007450581}
 --- !u!114 &9058380578766742822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,7 +368,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: PowerIcon
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 356401506337303315, guid: 1849b10ef74d1b54394e2da35be456be, type: 3}
+    - {fileID: 3764932745082551646, guid: 1849b10ef74d1b54394e2da35be456be, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
