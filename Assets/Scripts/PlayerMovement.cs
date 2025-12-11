@@ -41,6 +41,25 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private bool isBlocking;     // Read-only flag for other scripts
 
+    [Header("Block Color Settings")]
+    [SerializeField] private Color blockColor = Color.blue;
+
+    private Renderer playerRenderer;
+
+    private Material originalMaterial;
+    private Material blockMaterial;
+
+    private void Awake()
+    {
+        playerRenderer = GetComponentInChildren<Renderer>();
+
+        originalMaterial = playerRenderer.material;
+        blockMaterial = new Material(originalMaterial);
+        blockMaterial.color = blockColor;
+    }
+
+
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -66,19 +85,29 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse1))
         {
             if (!isBlocking)
-            {
+                playerRenderer.material = blockMaterial;
+
                 StartBlock();
-            }
+            
         }
         else
         {
             if (isBlocking)
             {
                 StopBlock();
+
+                playerRenderer.material = originalMaterial;
+
+                if (playerRenderer == null)
+{
+    Debug.LogError("PlayerMovement: No Renderer found in children. Cannot apply block color.");
+    return;
+}
             }
         }
 
     }
+
 
     private void Move()
     {

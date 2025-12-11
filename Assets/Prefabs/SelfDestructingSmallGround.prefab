@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   triggeredColor: {r: 1, g: 0, b: 0, a: 1}
   fallDelay: 1.5
-  respawn: 0
+  respawn: 1
   respawnDelay: 3
   groundRenderer: {fileID: 0}
   rb: {fileID: 0}
