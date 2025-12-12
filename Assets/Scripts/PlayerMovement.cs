@@ -56,6 +56,9 @@ public class PlayerMovement : MonoBehaviour
         originalMaterial = playerRenderer.material;
         blockMaterial = new Material(originalMaterial);
         blockMaterial.color = blockColor;
+
+        disableWeaponCollidor();
+
     }
 
 

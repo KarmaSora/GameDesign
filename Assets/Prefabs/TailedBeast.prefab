@@ -588,9 +588,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerupPrefabs:
-  - {fileID: 6702517199473214620, guid: 2c2528c65df99344f8e3ffcbf41d90d7, type: 3}
-  - {fileID: 5514390184206021239, guid: 0efc29f494717774a8ccbb7d5076f372, type: 3}
-  - {fileID: 8670903240314919602, guid: 1849b10ef74d1b54394e2da35be456be, type: 3}
+  - {fileID: 1942029407797787760, guid: 5096505eed0f1604e83edca99d161a80, type: 3}
+  - {fileID: 7685262636751544437, guid: 9c1df0006a9eb534aa91a5aad0143151, type: 3}
+  - {fileID: 6022805986909525091, guid: b35951ba0889da541a8e269b7d113762, type: 3}
   dropChanceOnDeath: 0.3
   snapToGround: 1
   groundCheckHeight: 5
@@ -997,8 +997,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0628781, y: 0.015848476, z: 0.24209751}
-  m_Center: {x: 0.00016335647, y: 0.010195445, z: -0.010472632}
+  m_Size: {x: 0.070502065, y: 0.11915916, z: 0.22304262}
+  m_Center: {x: 0.00389905, y: 0.06185079, z: -0.0009451231}
 --- !u!1 &6817167099415534057
 GameObject:
   m_ObjectHideFlags: 0
@@ -1474,7 +1474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentHealth: 0
-  maxHealth: 300
+  maxHealth: 600
 --- !u!114 &4440522787102357848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1489,9 +1489,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpeed: 3
   rotationSpeed: 5
-  detectionRadius: 34
+  detectionRadius: 30
   limitToHomeRadius: 1
-  homeRadius: 36
+  homeRadius: 33
   xpReward: 9999
   enemyRB: {fileID: 2455514582930504645}
   player: {fileID: 0}
