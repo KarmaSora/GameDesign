@@ -560,8 +560,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionZone: {fileID: 6058802258550454349}
-  enemyPrefab: {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126,
-    type: 3}
+  enemyPrefabs:
+  - {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126, type: 3}
+  - {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126, type: 3}
+  - {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126, type: 3}
+  - {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126, type: 3}
+  - {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126, type: 3}
+  - {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126, type: 3}
+  - {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126, type: 3}
+  - {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126, type: 3}
+  - {fileID: 7056605915726842367, guid: 721a195fc3220db4b9dfb2b340b8a361, type: 3}
+  - {fileID: 945419953542788215, guid: 7f42a0b928eee6b42971fe9bdfdf27a9, type: 3}
+  - {fileID: 5541013425926801876, guid: e04eaa1219ea36c4e9cbc9b96999a126, type: 3}
   spawnInterval: 3
   spawnPoints:
   - {fileID: 5860807981601689604}

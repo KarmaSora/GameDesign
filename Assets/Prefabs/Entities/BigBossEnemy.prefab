@@ -496,6 +496,7 @@ MonoBehaviour:
   powerupPrefabs:
   - {fileID: 7685262636751544437, guid: 9c1df0006a9eb534aa91a5aad0143151, type: 3}
   - {fileID: 1942029407797787760, guid: 5096505eed0f1604e83edca99d161a80, type: 3}
+  - {fileID: 1793186523261049349, guid: 7fce8f9707eda9e4ca6a464f1d58fc57, type: 3}
   dropChanceOnDeath: 0.036
   snapToGround: 1
   groundCheckHeight: 5
@@ -583,7 +584,7 @@ MonoBehaviour:
   damage: 20
   attackCooldown: 1.6
   windupTime: 0.5
-  hitRange: 3
+  hitRange: 4.3
   enemyRenderer: {fileID: 7240764853453573740}
   idleColor: {r: 1, g: 1, b: 1, a: 1}
   windupColor: {r: 1, g: 0, b: 0, a: 1}

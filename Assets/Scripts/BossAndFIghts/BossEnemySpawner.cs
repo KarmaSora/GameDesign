@@ -8,8 +8,8 @@ public class BossEnemySpawner : MonoBehaviour
     [SerializeField] private BoxCollider detectionZone;
 
     [Header("Spawn Settings")]
-    [Tooltip("Enemy prefab to spawn.")]
-    [SerializeField] private GameObject enemyPrefab;
+    [Tooltip("Enemy prefabs to randomly choose from when spawning.")]
+    [SerializeField] private List<GameObject> enemyPrefabs = new List<GameObject>();
 
     [Tooltip("Time in seconds between spawns while the player is in range.")]
     [SerializeField] private float spawnInterval = 5f;
@@ -49,7 +49,10 @@ public class BossEnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        if (enemyPrefab == null || detectionZone == null)
+        if (detectionZone == null)
+            return;
+
+        if (!HasAtLeastOneValidEnemyPrefab())
             return;
 
         if (!IsPlayerInRange())
@@ -65,6 +68,20 @@ public class BossEnemySpawner : MonoBehaviour
             SpawnEnemy();
             spawnTimer = 0f;
         }
+    }
+
+    private bool HasAtLeastOneValidEnemyPrefab()
+    {
+        if (enemyPrefabs == null || enemyPrefabs.Count == 0)
+            return false;
+
+        for (int i = 0; i < enemyPrefabs.Count; i++)
+        {
+            if (enemyPrefabs[i] != null)
+                return true;
+        }
+
+        return false;
     }
 
     private bool IsPlayerInRange()
@@ -86,6 +103,10 @@ public class BossEnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
+        GameObject prefabToSpawn = GetRandomEnemyPrefab();
+        if (prefabToSpawn == null)
+            return;
+
         Vector3 spawnPosition;
         Quaternion spawnRotation;
 
@@ -102,16 +123,38 @@ public class BossEnemySpawner : MonoBehaviour
             spawnRotation = transform.rotation;
         }
 
-        // Snap to ground/platform
         if (snapToGround)
         {
             spawnPosition = GetGroundPosition(spawnPosition);
         }
 
-        GameObject enemyInstance = Instantiate(enemyPrefab, spawnPosition, spawnRotation);
-
-        // Track this enemy as one of the boss minions
+        GameObject enemyInstance = Instantiate(prefabToSpawn, spawnPosition, spawnRotation);
         spawnedEnemies.Add(enemyInstance);
+    }
+
+    private GameObject GetRandomEnemyPrefab()
+    {
+        if (enemyPrefabs == null || enemyPrefabs.Count == 0)
+            return null;
+
+        // Try a few random picks first (fast, avoids allocations).
+        int tries = enemyPrefabs.Count;
+        for (int t = 0; t < tries; t++)
+        {
+            int index = Random.Range(0, enemyPrefabs.Count);
+            GameObject candidate = enemyPrefabs[index];
+            if (candidate != null)
+                return candidate;
+        }
+
+        // Fallback: deterministic scan for first valid entry.
+        for (int i = 0; i < enemyPrefabs.Count; i++)
+        {
+            if (enemyPrefabs[i] != null)
+                return enemyPrefabs[i];
+        }
+
+        return null;
     }
 
     private Vector3 GetGroundPosition(Vector3 originalPosition)
@@ -146,7 +189,6 @@ public class BossEnemySpawner : MonoBehaviour
 
     private void OnDestroy()
     {
-        // When boss gets destroyed, also kill all its minions
         KillAllSpawnedEnemies();
     }
 
