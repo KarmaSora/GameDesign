@@ -178,9 +178,23 @@ public class BossEnemySpawner : MonoBehaviour
         for (int i = 0; i < spawnedEnemies.Count; i++)
         {
             GameObject enemy = spawnedEnemies[i];
+
+            HealthSystem enemyHealth = enemy.GetComponentInParent<HealthSystem>();
+
             if (enemy != null)
             {
+                //Destroy(enemy);
+                if (enemyHealth != null)
+                {
+                    enemyHealth.TakeDamage(9999f);
+
+                }
+                else
+                {
+
                 Destroy(enemy);
+                }
+
             }
         }
 
