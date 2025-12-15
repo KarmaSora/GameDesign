@@ -25,6 +25,7 @@ public class SpawnManager : MonoBehaviour
 
     // Internal list tracking ONLY enemies spawned by THIS SpawnManager
     private readonly List<GameObject> spawnedEnemies = new List<GameObject>();
+    private bool isLevelComplete = false;
 
     private void Start()
     {
@@ -48,8 +49,9 @@ public class SpawnManager : MonoBehaviour
                 SpawnRandomPowerup();
                 waveNumber++;
             }
-            else
+            else if(isLevelComplete ==false)
             {
+                isLevelComplete = true;
                 Debug.Log($"SpawnManager ({name}): All waves completed!");
             }
         }

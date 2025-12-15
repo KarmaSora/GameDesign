@@ -35,6 +35,13 @@ public class GameManager : MonoBehaviour
 
 
 
+
+    [SerializeField] private BackgroundMusic backgroundMusic;
+
+    [SerializeField] private int uiMusicIndex = 0;
+    [SerializeField] private int gameplayMusicIndex = 1;
+
+
     public int EnemiesKilled
     {
         get { return enemiesKilled; }
@@ -64,6 +71,13 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        if (BackgroundMusic.Instance != null)
+        {
+            backgroundMusic = BackgroundMusic.Instance;
+        }
+
+
 
         // Try to auto-find player and its components if not assigned
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
@@ -129,6 +143,7 @@ public class GameManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.R))
             {
                 RestartGame();
+
             }
 
             return;
@@ -140,6 +155,7 @@ public class GameManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 StartGame();
+
             }
 
             return;
@@ -153,6 +169,7 @@ public class GameManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 ResumeGame();
+
             }
 
             return;
@@ -162,6 +179,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             PauseGame();
+
         }
     }
 
@@ -198,6 +216,8 @@ public class GameManager : MonoBehaviour
         enemiesKilled = 0;
         totalDamageDealt = 0f;
         totalDamageTaken = 0f;
+        PlayUIMusic();
+
     }
 
     private void StartGame()
@@ -232,6 +252,8 @@ public class GameManager : MonoBehaviour
         enemiesKilled = 0;
         totalDamageDealt = 0f;
         totalDamageTaken = 0f;
+        PlayGameplayMusic();
+
     }
 
     public void GameOver()
@@ -262,6 +284,8 @@ public class GameManager : MonoBehaviour
         }
 
         UpdateEndScreenStats(gameOverStatsText);
+        PlayUIMusic();
+
     }
 
     public void WinGame()
@@ -297,6 +321,8 @@ public class GameManager : MonoBehaviour
         }
 
         UpdateEndScreenStats(winStatsText);
+        PlayUIMusic();
+
     }
 
     private void RestartGame()
@@ -417,6 +443,7 @@ public class GameManager : MonoBehaviour
         {
             playerMovement.enabled = false;
         }
+        PlayUIMusic();
     }
 
     private void ResumeGame()
@@ -438,6 +465,43 @@ public class GameManager : MonoBehaviour
         {
             playerMovement.enabled = true;
         }
+        PlayGameplayMusic();
     }
+
+
+
+    private void PlayUIMusic()
+    {
+        if (backgroundMusic == null)
+        {
+            if (BackgroundMusic.Instance != null)
+            {
+                backgroundMusic = BackgroundMusic.Instance;
+            }
+        }
+
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.SelectIndex(uiMusicIndex, false);
+        }
+    }
+
+    private void PlayGameplayMusic()
+    {
+        if (backgroundMusic == null)
+        {
+            if (BackgroundMusic.Instance != null)
+            {
+                backgroundMusic = BackgroundMusic.Instance;
+            }
+        }
+
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.SelectIndex(gameplayMusicIndex, false);
+        }
+    }
+
+
 
 }
