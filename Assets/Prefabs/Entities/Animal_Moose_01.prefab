@@ -235,7 +235,7 @@ MonoBehaviour:
   detectionRadius: 8
   limitToHomeRadius: 1
   homeRadius: 10
-  xpReward: 350
+  xpReward: 70
   enemyRB: {fileID: 0}
   player: {fileID: 0}
 --- !u!114 &2101915195400442487
@@ -602,8 +602,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.12967268, y: 0.16631664, z: 0.43783462}
-  m_Center: {x: -0.0035501097, y: 0.047471136, z: -0.049821883}
+  m_Size: {x: 0.12967268, y: 0.31537142, z: 0.3284842}
+  m_Center: {x: -0.003550107, y: 0.12199853, z: 0.004853379}
 --- !u!1 &4001246954180751754
 GameObject:
   m_ObjectHideFlags: 0

@@ -460,7 +460,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentHealth: 0
-  maxHealth: 150
+  maxHealth: 120
 --- !u!114 &1348954955715781402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -478,7 +478,7 @@ MonoBehaviour:
   detectionRadius: 10
   limitToHomeRadius: 1
   homeRadius: 12
-  xpReward: 250
+  xpReward: 60
   enemyRB: {fileID: 1774099504358840169}
   player: {fileID: 0}
 --- !u!114 &379593006542073685
@@ -582,7 +582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 20
-  attackCooldown: 1.6
+  attackCooldown: 1.4
   windupTime: 0.5
   hitRange: 4.3
   enemyRenderer: {fileID: 7240764853453573740}
