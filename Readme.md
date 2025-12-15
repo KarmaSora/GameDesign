@@ -29,9 +29,17 @@
 
 ## Game Controls
 
--- W = forwards, S = backwards to move
+-- WASD to move
 -- Mouse: Rotate the camera and chaning the players direction
 -- Mouse Left click : click to Attack
 -- Mouse Right click : hold to block all damage and Defend
 -- Space: Jump
 -- Left Shift: Hold to sprint
+-- ESC to pause the game
+
+## Game Camera speed setting
+
+--Changing the camera speed in the game can be done at the start screen or after pausing the game
+--At the top left corner you will see the current speed.
+--Pressing "U" or "I" will increase or decrease it
+--Pressing "R" will reset it to the default value
