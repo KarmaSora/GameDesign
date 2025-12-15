@@ -87,6 +87,8 @@ public class CameraCOntroller : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             setCameraSpeed(150);
+            changed = true;
+
         }
 
 
