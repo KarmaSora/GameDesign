@@ -1,5 +1,7 @@
 # How to open Unity and run the game
 
+![Game Thumbnail](images/Thumbnail.png)
+
 ## Requirements
 
 - Unity version 2022.3.62f1 (the exact version used when developing the game) or latest version
